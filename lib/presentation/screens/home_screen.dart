@@ -2,6 +2,7 @@ import 'package:babay_mobile/presentation/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/screen_background.dart';
+import '../widgets/coupon_details_dialog.dart';
 import 'notifications_screen.dart';
 import 'business_screen.dart';
 
@@ -81,9 +82,23 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.language_outlined, color: Colors.black),
-            onPressed: () {},
+          PopupMenuButton<String>(
+            icon: Icon(Icons.language),
+            onSelected: (String value) {
+              // set app language based on value
+            },
+            itemBuilder:
+                (BuildContext context) => <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(value: 'uz', child: Text('🇺🇿 Uzbek')),
+                  PopupMenuItem<String>(
+                    value: 'ru',
+                    child: Text('🇷🇺 Russian'),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'en',
+                    child: Text('🇬🇧 English'),
+                  ),
+                ],
           ),
           IconButton(
             icon: const Icon(Icons.person_outline, color: Colors.black),
@@ -221,7 +236,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: coupon['color'],
                         borderRadius: BorderRadius.circular(16),
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => CouponDetailsDialog(coupon: coupon),
+                            );
+                          },
                           borderRadius: BorderRadius.circular(16),
                           child: Padding(
                             padding: const EdgeInsets.all(16),

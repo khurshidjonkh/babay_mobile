@@ -40,7 +40,7 @@ class CouponCard extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  shape: BoxShape.circle,
+                  shape: BoxShape.rectangle,
                   image: DecorationImage(
                     image: AssetImage(logoPath),
                     fit: BoxFit.cover,
@@ -92,20 +92,14 @@ class CouponCard extends StatelessWidget {
               const SizedBox(width: 12),
               Text(
                 '$currentValue/$maxValue',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Colors.black87,
-                ),
+                style: GoogleFonts.poppins(fontSize: 14, color: Colors.black87),
               ),
             ],
           ),
           const SizedBox(height: 12),
           Text(
             'Tugash muddati: ${expiryDate.day.toString().padLeft(2, '0')}.${expiryDate.month.toString().padLeft(2, '0')}.${expiryDate.year}',
-            style: GoogleFonts.poppins(
-              fontSize: 12,
-              color: Colors.black54,
-            ),
+            style: GoogleFonts.poppins(fontSize: 12, color: Colors.black54),
           ),
         ],
       ),
