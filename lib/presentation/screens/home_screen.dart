@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/screen_background.dart';
 import 'notifications_screen.dart';
+import 'business_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -144,7 +145,14 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: OutlinedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const BusinessScreen(),
+                    ),
+                  );
+                },
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 48),
                   side: const BorderSide(color: Colors.grey),
@@ -186,120 +194,101 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                children:
-                    coupons.asMap().entries.map((entry) {
-                      final coupon = entry.value;
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () {
-                              // Handle card tap
-                            },
-                            child: Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(color: coupon['color']),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        width: 24,
-                                        height: 24,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          image: DecorationImage(
-                                            image: AssetImage(coupon['logo']),
-                                            fit: BoxFit.cover,
-                                          ),
+              child: ListView.builder(
+                padding: const EdgeInsets.only(
+                  top: 24,
+                  bottom: 32,
+                  left: 16,
+                  right: 16,
+                ),
+                physics: const BouncingScrollPhysics(),
+                itemCount: coupons.length,
+                itemBuilder: (context, index) {
+                  final coupon = coupons[index];
+                  return Transform.translate(
+                    offset: Offset(0, -index * 90.0),
+                    child: Container(
+                      height: 160,
+                      margin: const EdgeInsets.only(bottom: 64),
+                      child: Material(
+                        elevation: 4,
+                        color: coupon['color'],
+                        borderRadius: BorderRadius.circular(16),
+                        child: InkWell(
+                          onTap: () {},
+                          borderRadius: BorderRadius.circular(16),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 20,
+                                      backgroundColor: Colors.white,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Image.asset(
+                                          coupon['logo'],
+                                          fit: BoxFit.contain,
                                         ),
                                       ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        coupon['name'],
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      Text(
-                                        '7/10',
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 12,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Stack(
-                                    children: [
-                                      Container(
-                                        height: 2,
-                                        width: double.infinity,
-                                        color: Colors.white.withOpacity(0.3),
-                                      ),
-                                      Container(
-                                        height: 2,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                            0.7,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(
-                                            1,
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        right:
-                                            MediaQuery.of(context).size.width *
-                                                0.3 -
-                                            4,
-                                        top: -3,
-                                        child: Container(
-                                          width: 8,
-                                          height: 8,
-                                          decoration: const BoxDecoration(
-                                            color: Colors.white,
-                                            shape: BoxShape.circle,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    '${coupon['amount'].toInt()} UZS kupon aktiv..',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 12,
-                                      color: Colors.white,
                                     ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    'Tugash muddati: 24.04.2025',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 11,
-                                      color: Colors.white70,
+                                    Text(
+                                      coupon['name'],
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
+                                  ],
+                                ),
+                                const Spacer(),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '7/10',
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${coupon['amount'].toInt()} UZS',
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: LinearProgressIndicator(
+                                    value: 0.7,
+                                    backgroundColor: Colors.grey.shade200,
+                                    valueColor:
+                                        const AlwaysStoppedAnimation<Color>(
+                                          Colors.black,
+                                        ),
+                                    minHeight: 8,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                      );
-                    }).toList(),
-                ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ],
