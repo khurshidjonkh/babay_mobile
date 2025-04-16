@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../widgets/gradient_background.dart';
+import '../widgets/screen_background.dart';
 import 'sms_verification_screen.dart';
 
 class PhoneInputScreen extends StatelessWidget {
@@ -10,7 +10,7 @@ class PhoneInputScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GradientBackground(
+      body: ScreenBackground(
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -26,18 +26,19 @@ class PhoneInputScreen extends StatelessWidget {
                   'Kirish / Ro\'yhatdan o\'tish',
                   style: GoogleFonts.poppins(
                     fontSize: 24,
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
                   ),
                 ),
                 const SizedBox(height: 32),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white,
+                    border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TextFormField(
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.black),
                     keyboardType: TextInputType.phone,
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
@@ -45,10 +46,10 @@ class PhoneInputScreen extends StatelessWidget {
                     ],
                     decoration: InputDecoration(
                       prefixText: '+998 ',
-                      prefixStyle: const TextStyle(color: Colors.white),
+                      prefixStyle: const TextStyle(color: Colors.black),
                       hintText: 'Telefon raqamingiz',
                       hintStyle: TextStyle(
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.grey,
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -73,8 +74,8 @@ class PhoneInputScreen extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF9C27B0),
+                      backgroundColor: const Color(0xFF9C27B0),
+                      foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
