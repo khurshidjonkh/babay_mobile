@@ -52,6 +52,8 @@ flutter:
     - assets/images/safia.jpg
     - assets/images/korzinka.png
     - assets/images/qanotchi.jpg
+    - assets/images/click_logo.png
+    - assets/images/payme_logo.png
   #   - images/a_dot_ham.jpeg
 
   # example:

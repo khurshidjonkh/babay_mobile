@@ -1,10 +1,15 @@
+import 'package:babay_mobile/presentation/screens/payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CatalogDetailScreen extends StatelessWidget {
   final String label;
   final IconData icon;
-  const CatalogDetailScreen({super.key, required this.label, required this.icon});
+  const CatalogDetailScreen({
+    super.key,
+    required this.label,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -87,10 +92,7 @@ class CatalogDetailScreen extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 'Tugash muddati: $expiry',
-                style: GoogleFonts.poppins(
-                  color: Colors.grey,
-                  fontSize: 14,
-                ),
+                style: GoogleFonts.poppins(color: Colors.grey, fontSize: 14),
               ),
               const SizedBox(height: 12),
               Text(
@@ -116,10 +118,7 @@ class CatalogDetailScreen extends StatelessWidget {
               const SizedBox(height: 6),
               Text(
                 description,
-                style: GoogleFonts.poppins(
-                  color: Colors.black87,
-                  fontSize: 14,
-                ),
+                style: GoogleFonts.poppins(color: Colors.black87, fontSize: 14),
               ),
               const SizedBox(height: 32),
               SizedBox(
@@ -134,7 +133,12 @@ class CatalogDetailScreen extends StatelessWidget {
                     ),
                     elevation: 0,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => PaymentScreen()),
+                    );
+                  },
                   child: Text(
                     '${couponPrice.toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]},")} UZS Xarid qilish',
                     style: GoogleFonts.poppins(

@@ -56,6 +56,25 @@ class _HomeScreenState extends State<HomeScreen> {
     },
   ];
 
+  // Example archived coupons
+  final List<Map<String, dynamic>> archivedCoupons = [
+    {
+      'name': 'Safia',
+      'amount': 50000.0,
+      'expiry': '24.03.2025',
+    },
+    {
+      'name': 'Korzinka',
+      'amount': 50000.0,
+      'expiry': '24.03.2025',
+    },
+    {
+      'name': 'Qanotchi',
+      'amount': 50000.0,
+      'expiry': '24.03.2025',
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -169,159 +188,231 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: OutlinedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const BusinessScreen(),
+            if (isFaolSelected)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: OutlinedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const BusinessScreen(),
+                      ),
+                    );
+                  },
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 48),
+                    side: const BorderSide(color: Colors.grey),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                  );
-                },
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 48),
-                  side: const BorderSide(color: Colors.grey),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
                   ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.orange,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        'BaBay',
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 12,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.orange,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          'BaBay',
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Business',
-                      style: GoogleFonts.poppins(
-                        color: Colors.black,
-                        fontSize: 14,
+                      const SizedBox(width: 8),
+                      Text(
+                        'Business',
+                        style: GoogleFonts.poppins(
+                          color: Colors.black,
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
             const SizedBox(height: 16),
             Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.only(
-                  top: 24,
-                  bottom: 32,
-                  left: 16,
-                  right: 16,
-                ),
-                physics: const BouncingScrollPhysics(),
-                itemCount: coupons.length,
-                itemBuilder: (context, index) {
-                  final coupon = coupons[index];
-                  return Transform.translate(
-                    offset: Offset(0, -index * 90.0),
-                    child: Container(
-                      height: 160,
-                      margin: const EdgeInsets.only(bottom: 64),
-                      child: Material(
-                        elevation: 4,
-                        color: coupon['color'],
-                        borderRadius: BorderRadius.circular(16),
-                        child: InkWell(
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => CouponDetailsDialog(coupon: coupon),
-                            );
-                          },
-                          borderRadius: BorderRadius.circular(16),
+              child: isFaolSelected
+                  ? ListView.builder(
+                      padding: const EdgeInsets.only(
+                        top: 24,
+                        bottom: 32,
+                        left: 16,
+                        right: 16,
+                      ),
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: coupons.length,
+                      itemBuilder: (context, index) {
+                        final coupon = coupons[index];
+                        return Transform.translate(
+                          offset: Offset(0, -index * 90.0),
+                          child: Container(
+                            height: 160,
+                            margin: const EdgeInsets.only(bottom: 64),
+                            child: Material(
+                              elevation: 4,
+                              color: coupon['color'],
+                              borderRadius: BorderRadius.circular(16),
+                              child: InkWell(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => CouponDetailsDialog(coupon: coupon),
+                                  );
+                                },
+                                borderRadius: BorderRadius.circular(16),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 20,
+                                            backgroundColor: Colors.white,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(4.0),
+                                              child: Image.asset(
+                                                coupon['logo'],
+                                                fit: BoxFit.contain,
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            coupon['name'],
+                                            style: GoogleFonts.poppins(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const Spacer(),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            '7/10',
+                                            style: GoogleFonts.poppins(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          Text(
+                                            '${coupon['amount'].toInt()} UZS',
+                                            style: GoogleFonts.poppins(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8),
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: LinearProgressIndicator(
+                                          value: 0.7,
+                                          backgroundColor: Colors.grey.shade200,
+                                          valueColor:
+                                              const AlwaysStoppedAnimation<Color>(
+                                                Colors.black,
+                                              ),
+                                          minHeight: 8,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                      itemCount: archivedCoupons.length,
+                      itemBuilder: (context, index) {
+                        final coupon = archivedCoupons[index];
+                        final bgColors = [
+                          const Color(0xFFF4F2F9),
+                          const Color(0xFFD5D3DB),
+                        ];
+                        final bgColor = bgColors[index % 2];
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 24),
+                          decoration: BoxDecoration(
+                            color: bgColor,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                           child: Padding(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    CircleAvatar(
-                                      radius: 20,
-                                      backgroundColor: Colors.white,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: Image.asset(
-                                          coupon['logo'],
-                                          fit: BoxFit.contain,
+                                    Row(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 18,
+                                          backgroundColor: Colors.white,
+                                          child: Container(),
                                         ),
-                                      ),
+                                        const SizedBox(width: 12),
+                                        Text(
+                                          coupon['name'],
+                                          style: GoogleFonts.poppins(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     Text(
-                                      coupon['name'],
+                                      '${coupon['amount'].toInt()} UZS',
                                       style: GoogleFonts.poppins(
-                                        color: Colors.black,
+                                        color: Colors.grey,
                                         fontSize: 16,
+                                        decoration: TextDecoration.lineThrough,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   ],
                                 ),
-                                const Spacer(),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      '7/10',
-                                      style: GoogleFonts.poppins(
-                                        color: Colors.black,
-                                        fontSize: 14,
-                                      ),
+                                const SizedBox(height: 10),
+                                Center(
+                                  child: Text(
+                                    'Tugash muddati: ${coupon['expiry']}',
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.red,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
                                     ),
-                                    Text(
-                                      '${coupon['amount'].toInt()} UZS',
-                                      style: GoogleFonts.poppins(
-                                        color: Colors.black,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: LinearProgressIndicator(
-                                    value: 0.7,
-                                    backgroundColor: Colors.grey.shade200,
-                                    valueColor:
-                                        const AlwaysStoppedAnimation<Color>(
-                                          Colors.black,
-                                        ),
-                                    minHeight: 8,
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
           ],
         ),
