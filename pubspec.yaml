@@ -22,6 +22,7 @@ dependencies:
   mobile_scanner: ^4.0.0
   permission_handler: ^11.3.0
   qr_flutter: ^4.1.0
+  image_picker: ^1.0.7
 
 dev_dependencies:
   flutter_test:
@@ -51,7 +52,6 @@ flutter:
     - assets/images/safia.jpg
     - assets/images/korzinka.png
     - assets/images/qanotchi.jpg
-    - assets/images/Mukhtor.jpg
   #   - images/a_dot_ham.jpeg
 
   # example:

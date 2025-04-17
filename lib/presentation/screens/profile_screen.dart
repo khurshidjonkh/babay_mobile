@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -29,7 +30,17 @@ class ProfileScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.edit_outlined, color: Colors.black),
             onPressed: () {
-              // Will implement edit functionality later
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditProfileScreen(
+                    initialName: "ALisher Ro'ziqulov",
+                    initialPhone: "+99899 888 0808",
+                    initialEmail: "info@babay.org",
+                    initialBirthDate: DateTime(1998, 1, 1),
+                  ),
+                ),
+              );
             },
           ),
         ],

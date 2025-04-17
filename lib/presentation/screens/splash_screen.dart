@@ -28,9 +28,9 @@ class _SplashScreenState extends State<SplashScreen>
 
     // Navigate to auth screen after splash
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.of(
-        context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => const PhoneInputScreen()));
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const PhoneInputScreen()),
+      );
     });
   }
 
