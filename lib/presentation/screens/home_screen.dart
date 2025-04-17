@@ -60,18 +60,25 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Map<String, dynamic>> archivedCoupons = [
     {
       'name': 'Safia',
+      'logo': 'assets/images/safia.jpg',
+
       'amount': 50000.0,
       'expiry': '24.03.2025',
+      'color': const Color(0xFFE8E5FF),
     },
     {
       'name': 'Korzinka',
+      'logo': 'assets/images/korzinka.png',
       'amount': 50000.0,
       'expiry': '24.03.2025',
+      'color': const Color(0xFF9C27B0),
     },
     {
       'name': 'Qanotchi',
+      'logo': 'assets/images/qanotchi.jpg',
       'amount': 50000.0,
       'expiry': '24.03.2025',
+      'color': const Color.fromARGB(255, 199, 210, 163),
     },
   ];
 
@@ -241,178 +248,217 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             const SizedBox(height: 16),
             Expanded(
-              child: isFaolSelected
-                  ? ListView.builder(
-                      padding: const EdgeInsets.only(
-                        top: 24,
-                        bottom: 32,
-                        left: 16,
-                        right: 16,
-                      ),
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: coupons.length,
-                      itemBuilder: (context, index) {
-                        final coupon = coupons[index];
-                        return Transform.translate(
-                          offset: Offset(0, -index * 90.0),
-                          child: Container(
-                            height: 160,
-                            margin: const EdgeInsets.only(bottom: 64),
-                            child: Material(
-                              elevation: 4,
-                              color: coupon['color'],
-                              borderRadius: BorderRadius.circular(16),
-                              child: InkWell(
-                                onTap: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => CouponDetailsDialog(coupon: coupon),
-                                  );
-                                },
+              child:
+                  isFaolSelected
+                      ? ListView.builder(
+                        padding: const EdgeInsets.only(
+                          top: 24,
+                          bottom: 32,
+                          left: 16,
+                          right: 16,
+                        ),
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: coupons.length,
+                        itemBuilder: (context, index) {
+                          final coupon = coupons[index];
+                          return Transform.translate(
+                            offset: Offset(0, -index * 90.0),
+                            child: Container(
+                              height: 160,
+                              margin: const EdgeInsets.only(bottom: 64),
+                              child: Material(
+                                elevation: 4,
+                                color: coupon['color'],
                                 borderRadius: BorderRadius.circular(16),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 20,
-                                            backgroundColor: Colors.white,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(4.0),
-                                              child: Image.asset(
-                                                coupon['logo'],
-                                                fit: BoxFit.contain,
-                                              ),
-                                            ),
+                                child: InkWell(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder:
+                                          (context) => CouponDetailsDialog(
+                                            coupon: coupon,
                                           ),
-                                          Text(
-                                            coupon['name'],
-                                            style: GoogleFonts.poppins(
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const Spacer(),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            '7/10',
-                                            style: GoogleFonts.poppins(
-                                              color: Colors.black,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                          Text(
-                                            '${coupon['amount'].toInt()} UZS',
-                                            style: GoogleFonts.poppins(
-                                              color: Colors.black,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 8),
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(8),
-                                        child: LinearProgressIndicator(
-                                          value: 0.7,
-                                          backgroundColor: Colors.grey.shade200,
-                                          valueColor:
-                                              const AlwaysStoppedAnimation<Color>(
-                                                Colors.black,
-                                              ),
-                                          minHeight: 8,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                  : ListView.builder(
-                      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-                      itemCount: archivedCoupons.length,
-                      itemBuilder: (context, index) {
-                        final coupon = archivedCoupons[index];
-                        final bgColors = [
-                          const Color(0xFFF4F2F9),
-                          const Color(0xFFD5D3DB),
-                        ];
-                        final bgColor = bgColors[index % 2];
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 24),
-                          decoration: BoxDecoration(
-                            color: bgColor,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
+                                    );
+                                  },
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        CircleAvatar(
-                                          radius: 18,
-                                          backgroundColor: Colors.white,
-                                          child: Container(),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 20,
+                                              backgroundColor: Colors.white,
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(
+                                                  4.0,
+                                                ),
+                                                child: Image.asset(
+                                                  coupon['logo'],
+                                                  fit: BoxFit.contain,
+                                                ),
+                                              ),
+                                            ),
+                                            Text(
+                                              coupon['name'],
+                                              style: GoogleFonts.poppins(
+                                                color: Colors.black,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(width: 12),
-                                        Text(
-                                          coupon['name'],
-                                          style: GoogleFonts.poppins(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
+                                        const Spacer(),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              '7/10',
+                                              style: GoogleFonts.poppins(
+                                                color: Colors.black,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            Text(
+                                              '${coupon['amount'].toInt()} UZS',
+                                              style: GoogleFonts.poppins(
+                                                color: Colors.black,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 8),
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                          child: LinearProgressIndicator(
+                                            value: 0.7,
+                                            backgroundColor:
+                                                Colors.grey.shade200,
+                                            valueColor:
+                                                const AlwaysStoppedAnimation<
+                                                  Color
+                                                >(Colors.black),
+                                            minHeight: 8,
                                           ),
                                         ),
                                       ],
                                     ),
-                                    Text(
-                                      '${coupon['amount'].toInt()} UZS',
-                                      style: GoogleFonts.poppins(
-                                        color: Colors.grey,
-                                        fontSize: 16,
-                                        decoration: TextDecoration.lineThrough,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                                const SizedBox(height: 10),
-                                Center(
-                                  child: Text(
-                                    'Tugash muddati: ${coupon['expiry']}',
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.red,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                      : ListView.builder(
+                        padding: const EdgeInsets.only(
+                          top: 24,
+                          bottom: 32,
+                          left: 16,
+                          right: 16,
+                        ),
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: archivedCoupons.length,
+                        itemBuilder: (context, index) {
+                          final coupon = archivedCoupons[index];
+                          return Transform.translate(
+                            offset: Offset(0, -index * 90.0),
+                            child: Container(
+                              height: 160,
+                              margin: const EdgeInsets.only(bottom: 64),
+                              child: Material(
+                                elevation: 4,
+                                color: coupon['color'],
+                                borderRadius: BorderRadius.circular(16),
+                                child: InkWell(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder:
+                                          (context) => CouponDetailsDialog(
+                                            coupon: coupon,
+                                          ),
+                                    );
+                                  },
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                CircleAvatar(
+                                                  radius: 20,
+                                                  backgroundColor: Colors.white,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                          4.0,
+                                                        ),
+                                                    child: Image.asset(
+                                                      coupon['logo'],
+                                                      fit: BoxFit.contain,
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Text(
+                                                  coupon['name'],
+                                                  style: GoogleFonts.poppins(
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Text(
+                                              '${coupon['amount'].toInt()} UZS',
+                                              style: GoogleFonts.poppins(
+                                                color: Colors.black,
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const Spacer(),
+                                        Text(
+                                          'Tugash muddati: ${coupon['expiry']}',
+                                          style: GoogleFonts.poppins(
+                                            color: Colors.red,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 16),
+                                      ],
                                     ),
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
+                          );
+                        },
+                      ),
             ),
           ],
         ),
