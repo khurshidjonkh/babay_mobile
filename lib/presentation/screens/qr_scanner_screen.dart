@@ -18,7 +18,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
   void initState() {
     super.initState();
     controller = MobileScannerController();
-    _requestCameraPermission();
+    _initializeCamera();
   }
 
   @override
@@ -27,15 +27,59 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
     super.dispose();
   }
 
-  Future<void> _requestCameraPermission() async {
-    final status = await Permission.camera.request();
+  Future<void> _initializeCamera() async {
+    final status = await Permission.camera.status;
     if (status.isDenied) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Camera permission is required')),
-        );
+      final result = await Permission.camera.request();
+      if (result.isDenied) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Camera permission is required')),
+          );
+        }
+        return;
       }
     }
+
+    if (mounted) {
+      await controller?.stop();
+      await Future.delayed(const Duration(milliseconds: 200));
+      await controller?.start();
+    }
+  }
+
+  Widget _buildCornerBorder({
+    required Alignment alignment,
+    required bool isLeft,
+    required bool isTop,
+  }) {
+    return Align(
+      alignment: alignment,
+      child: Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          border: Border(
+            left:
+                isLeft
+                    ? const BorderSide(color: Colors.white, width: 3)
+                    : BorderSide.none,
+            right:
+                !isLeft
+                    ? const BorderSide(color: Colors.white, width: 3)
+                    : BorderSide.none,
+            top:
+                isTop
+                    ? const BorderSide(color: Colors.white, width: 3)
+                    : BorderSide.none,
+            bottom:
+                !isTop
+                    ? const BorderSide(color: Colors.white, width: 3)
+                    : BorderSide.none,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -78,65 +122,25 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
               ),
               child: Stack(
                 children: [
-                  // Top left corner
-                  Positioned(
-                    left: 0,
-                    top: 0,
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          left: BorderSide(color: Colors.white, width: 3),
-                          top: BorderSide(color: Colors.white, width: 3),
-                        ),
-                      ),
-                    ),
+                  _buildCornerBorder(
+                    alignment: Alignment.topLeft,
+                    isLeft: true,
+                    isTop: true,
                   ),
-                  // Top right corner
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          right: BorderSide(color: Colors.white, width: 3),
-                          top: BorderSide(color: Colors.white, width: 3),
-                        ),
-                      ),
-                    ),
+                  _buildCornerBorder(
+                    alignment: Alignment.topRight,
+                    isLeft: false,
+                    isTop: true,
                   ),
-                  // Bottom left corner
-                  Positioned(
-                    left: 0,
-                    bottom: 0,
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          left: BorderSide(color: Colors.white, width: 3),
-                          bottom: BorderSide(color: Colors.white, width: 3),
-                        ),
-                      ),
-                    ),
+                  _buildCornerBorder(
+                    alignment: Alignment.bottomLeft,
+                    isLeft: true,
+                    isTop: false,
                   ),
-                  // Bottom right corner
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          right: BorderSide(color: Colors.white, width: 3),
-                          bottom: BorderSide(color: Colors.white, width: 3),
-                        ),
-                      ),
-                    ),
+                  _buildCornerBorder(
+                    alignment: Alignment.bottomRight,
+                    isLeft: false,
+                    isTop: false,
                   ),
                 ],
               ),

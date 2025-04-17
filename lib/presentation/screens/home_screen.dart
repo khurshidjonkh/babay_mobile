@@ -80,6 +80,28 @@ class _HomeScreenState extends State<HomeScreen> {
       'expiry': '24.03.2025',
       'color': const Color.fromARGB(255, 199, 210, 163),
     },
+    {
+      'name': 'Safia',
+      'logo': 'assets/images/safia.jpg',
+
+      'amount': 50000.0,
+      'expiry': '24.03.2025',
+      'color': const Color(0xFFE8E5FF),
+    },
+    {
+      'name': 'Korzinka',
+      'logo': 'assets/images/korzinka.png',
+      'amount': 50000.0,
+      'expiry': '24.03.2025',
+      'color': const Color(0xFF9C27B0),
+    },
+    {
+      'name': 'Qanotchi',
+      'logo': 'assets/images/qanotchi.jpg',
+      'amount': 50000.0,
+      'expiry': '24.03.2025',
+      'color': const Color.fromARGB(255, 199, 210, 163),
+    },
   ];
 
   @override
@@ -115,34 +137,37 @@ class _HomeScreenState extends State<HomeScreen> {
               showCupertinoModalBottomSheet(
                 context: context,
                 builder:
-                    (context) => Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ListTile(
-                          leading: Text('🇺🇿'),
-                          title: Text('Uzbek'),
-                          onTap: () {
-                            Navigator.pop(context, 'uz');
-                            // Set language here
-                          },
-                        ),
-                        ListTile(
-                          leading: Text('🇷🇺'),
-                          title: Text('Russian'),
-                          onTap: () {
-                            Navigator.pop(context, 'ru');
-                            // Set language here
-                          },
-                        ),
-                        ListTile(
-                          leading: Text('🇬🇧'),
-                          title: Text('English'),
-                          onTap: () {
-                            Navigator.pop(context, 'en');
-                            // Set language here
-                          },
-                        ),
-                      ],
+                    (context) => Material(
+                      color: Colors.white,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ListTile(
+                            leading: Text('🇺🇿'),
+                            title: Text('Uzbek'),
+                            onTap: () {
+                              Navigator.pop(context, 'uz');
+                              // Set language here
+                            },
+                          ),
+                          ListTile(
+                            leading: Text('🇷🇺'),
+                            title: Text('Russian'),
+                            onTap: () {
+                              Navigator.pop(context, 'ru');
+                              // Set language here
+                            },
+                          ),
+                          ListTile(
+                            leading: Text('🇬🇧'),
+                            title: Text('English'),
+                            onTap: () {
+                              Navigator.pop(context, 'en');
+                              // Set language here
+                            },
+                          ),
+                        ],
+                      ),
                     ),
               );
             },
@@ -179,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         'Faol',
                         style: GoogleFonts.poppins(
-                          color: Colors.black,
+                          color: isFaolSelected ? Colors.white : Colors.black,
                           fontWeight:
                               isFaolSelected
                                   ? FontWeight.bold
@@ -202,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         'Arxiv',
                         style: GoogleFonts.poppins(
-                          color: Colors.black,
+                          color: isFaolSelected ? Colors.black : Colors.white,
                           fontWeight:
                               !isFaolSelected
                                   ? FontWeight.bold
@@ -271,7 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child:
                   isFaolSelected
                       ? ListView.builder(
-                        padding: const EdgeInsets.only(
+                        padding: EdgeInsets.only(
                           top: 24,
                           bottom: 32,
                           left: 16,
