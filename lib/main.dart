@@ -1,4 +1,4 @@
-import 'package:babay_mobile/presentation/screens/home_screen.dart';
+import 'package:babay_mobile/presentation/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
+      home: const SplashScreen(),
     );
   }
 }

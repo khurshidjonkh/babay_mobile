@@ -18,7 +18,7 @@ class SmsVerificationScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/images/logo.jpg', // Make sure this asset exists
+                  'assets/images/logo.png', // Make sure this asset exists
                   height: 120,
                 ),
                 const SizedBox(height: 32),

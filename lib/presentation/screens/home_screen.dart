@@ -1,3 +1,4 @@
+import 'package:babay_mobile/presentation/screens/qr_scanner_screen.dart';
 import 'package:babay_mobile/presentation/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,7 +6,6 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import '../widgets/screen_background.dart';
 import '../widgets/coupon_details_sheet.dart';
 import 'notifications_screen.dart';
-import 'business_screen.dart';
 import 'profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -173,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextButton.styleFrom(
                         backgroundColor:
                             isFaolSelected
-                                ? Colors.grey.shade400
+                                ? Colors.purple.shade300
                                 : Colors.grey.shade50,
                       ),
                       child: Text(
@@ -196,7 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextButton.styleFrom(
                         backgroundColor:
                             !isFaolSelected
-                                ? Colors.grey.shade400
+                                ? Colors.purple.shade300
                                 : Colors.grey.shade50,
                       ),
                       child: Text(
@@ -223,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const BusinessScreen(),
+                        builder: (context) => const QRScannerScreen(),
                       ),
                     );
                   },
@@ -283,23 +283,21 @@ class _HomeScreenState extends State<HomeScreen> {
                           final coupon = coupons[index];
                           return Transform.translate(
                             offset: Offset(0, -index * 90.0),
-                            child: Container(
-                              height: 160,
-                              margin: const EdgeInsets.only(bottom: 64),
-                              child: Material(
-                                elevation: 4,
-                                color: coupon['color'],
-                                borderRadius: BorderRadius.circular(16),
-                                child: InkWell(
-                                  onTap: () {
-                                    showCupertinoModalBottomSheet(
-                                      context: context,
-                                      builder:
-                                          (context) => CouponDetailsSheet(
-                                            coupon: coupon,
-                                          ),
-                                    );
-                                  },
+                            child: InkWell(
+                              onTap: () {
+                                showCupertinoModalBottomSheet(
+                                  context: context,
+                                  builder:
+                                      (context) =>
+                                          CouponDetailsSheet(coupon: coupon),
+                                );
+                              },
+                              child: Container(
+                                height: 160,
+                                margin: const EdgeInsets.only(bottom: 64),
+                                child: Material(
+                                  elevation: 4,
+                                  color: coupon['color'],
                                   borderRadius: BorderRadius.circular(16),
                                   child: Padding(
                                     padding: const EdgeInsets.all(16),

@@ -18,7 +18,7 @@ class PhoneInputScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/images/logo.jpg', // Make sure this asset exists
+                  'assets/images/logo.png', // Make sure this asset exists
                   height: 120,
                 ),
                 const SizedBox(height: 32),
@@ -48,9 +48,7 @@ class PhoneInputScreen extends StatelessWidget {
                       prefixText: '+998 ',
                       prefixStyle: const TextStyle(color: Colors.black),
                       hintText: 'Telefon raqamingiz',
-                      hintStyle: TextStyle(
-                        color: Colors.grey,
-                      ),
+                      hintStyle: TextStyle(color: Colors.grey),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
