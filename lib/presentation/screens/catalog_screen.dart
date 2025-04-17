@@ -1,26 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'catalog_screen.dart';
+import 'catalog_detail_screen.dart';
 
-class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key});
+class CatalogScreen extends StatelessWidget {
+  CatalogScreen({super.key});
 
-  @override
-  State<SearchScreen> createState() => _SearchScreenState();
-}
-
-class _SearchScreenState extends State<SearchScreen> {
-  final List<Map<String, dynamic>> _categories = [
-    {'title': 'Salon/Spa', 'icon': Icons.spa},
-    {'title': 'Avto', 'icon': Icons.directions_car},
-    {'title': 'Restoran', 'icon': Icons.restaurant},
-    {'title': 'Dacha', 'icon': Icons.holiday_village},
-    {'title': 'Sayohat', 'icon': Icons.flight},
-    {'title': 'Uy', 'icon': Icons.home},
-    {'title': 'Salon/Spa', 'icon': Icons.spa},
-    {'title': 'Avto', 'icon': Icons.directions_car},
-    {'title': 'Restoran', 'icon': Icons.restaurant},
-  ];
+  final List<Map<String, dynamic>> items = List.generate(10, (index) => {
+    'label': index % 2 == 0 ? 'Deluxe Spa' : 'Nigina Spa',
+    'icon': Icons.spa,
+    // Replace with your real image asset or network path later
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +22,13 @@ class _SearchScreenState extends State<SearchScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
+        centerTitle: true,
         title: Text(
-          'Barcha Kuponlar',
+          'Catalog',
           style: GoogleFonts.poppins(
             color: Colors.black,
-            fontSize: 20,
             fontWeight: FontWeight.w500,
+            fontSize: 20,
           ),
         ),
       ),
@@ -75,44 +65,45 @@ class _SearchScreenState extends State<SearchScreen> {
             child: GridView.builder(
               padding: const EdgeInsets.all(16),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
+                crossAxisCount: 2,
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
-                childAspectRatio: 1.2,
+                childAspectRatio: 1,
               ),
-              itemCount: _categories.length,
+              itemCount: items.length,
               itemBuilder: (context, index) {
+                final item = items[index];
                 return InkWell(
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => CatalogScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => const CatalogDetailScreen(),
+                      ),
                     );
                   },
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(16),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey.shade300),
+                      color: Colors.purple.shade50,
+                      borderRadius: BorderRadius.circular(16),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          _categories[index]['icon'],
-                          color: Colors.grey.shade700,
-                          size: 24,
+                          item['icon'],
+                          size: 56,
+                          color: Colors.purple,
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 12),
                         Text(
-                          _categories[index]['title'],
+                          item['label'],
                           style: GoogleFonts.poppins(
                             color: Colors.black,
-                            fontSize: 12,
                             fontWeight: FontWeight.w500,
+                            fontSize: 16,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ],
                     ),
