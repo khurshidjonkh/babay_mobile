@@ -78,7 +78,10 @@ class CatalogScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const CatalogDetailScreen(),
+                        builder: (context) => CatalogDetailScreen(
+                          label: item['label'],
+                          icon: item['icon'],
+                        ),
                       ),
                     );
                   },
