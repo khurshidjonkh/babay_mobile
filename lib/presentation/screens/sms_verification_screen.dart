@@ -34,19 +34,19 @@ class SmsVerificationScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: List.generate(
-                    6,
+                    4,
                     (index) => SizedBox(
                       width: 45,
                       height: 55,
                       child: TextFormField(
                         onChanged: (value) {
-                          if (value.length == 1 && index < 5) {
+                          if (value.length == 1 && index < 3) {
                             FocusScope.of(context).nextFocus();
                           }
                           if (value.isEmpty && index > 0) {
                             FocusScope.of(context).previousFocus();
                           }
-                          if (index == 5 && value.length == 1) {
+                          if (index == 3 && value.length == 1) {
                             // Navigate to home screen after last digit
                             Navigator.pushReplacement(
                               context,
