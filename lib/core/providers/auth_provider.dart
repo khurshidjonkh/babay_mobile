@@ -5,6 +5,7 @@ class AuthProvider extends ChangeNotifier {
   final AuthService _authService;
   bool _isLoading = false;
   String? _error;
+  String? _phoneNumber;
 
   AuthProvider(this._authService);
 
@@ -21,7 +22,9 @@ class AuthProvider extends ChangeNotifier {
     try {
       final result = await _authService.sendPhoneNumber(phone);
       _isLoading = false;
-      if (!result) {
+      if (result) {
+        _phoneNumber = phone; // Save phone number on success
+      } else {
         _error = 'Failed to send verification code';
       }
       notifyListeners();
@@ -35,13 +38,19 @@ class AuthProvider extends ChangeNotifier {
   }
 
   // Verify phone number with code
-  Future<bool> verifyCode(String phone, String code) async {
+  Future<bool> verifyCode(String code) async {
+    if (_phoneNumber == null) {
+      _error = 'Phone number not found';
+      notifyListeners();
+      return false;
+    }
+
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      final result = await _authService.verifyCode(phone, code);
+      final result = await _authService.verifyCode(_phoneNumber!, code);
       _isLoading = false;
       if (!result) {
         _error = 'Invalid verification code';

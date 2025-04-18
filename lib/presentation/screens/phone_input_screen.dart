@@ -1,11 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import '../../core/providers/auth_provider.dart';
 import '../widgets/screen_background.dart';
 import 'sms_verification_screen.dart';
 
-class PhoneInputScreen extends StatelessWidget {
+class PhoneInputScreen extends StatefulWidget {
   const PhoneInputScreen({super.key});
+
+  @override
+  State<PhoneInputScreen> createState() => _PhoneInputScreenState();
+}
+
+class _PhoneInputScreenState extends State<PhoneInputScreen> {
+  final _phoneController = TextEditingController();
+  bool _isSubmitting = false;
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  void _handleSubmit(BuildContext context) async {
+    if (_phoneController.text.length != 9) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Telefon raqamini to\'g\'ri kiriting')),
+      );
+      return;
+    }
+
+    setState(() => _isSubmitting = true);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    try {
+      final success = await authProvider.sendPhoneNumber('998${_phoneController.text}');
+      if (success) {
+        if (!mounted) return;
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SmsVerificationScreen(),
+          ),
+        );
+      } else if (!mounted) {
+        return;
+      } else if (authProvider.error != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(authProvider.error!)),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +89,8 @@ class PhoneInputScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TextFormField(
+                    controller: _phoneController,
+                    enabled: !_isSubmitting,
                     style: const TextStyle(color: Colors.black),
                     keyboardType: TextInputType.phone,
                     inputFormatters: [
@@ -63,14 +116,7 @@ class PhoneInputScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SmsVerificationScreen(),
-                        ),
-                      );
-                    },
+                    onPressed: _isSubmitting ? null : () => _handleSubmit(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF9C27B0),
                       foregroundColor: Colors.white,
@@ -79,7 +125,7 @@ class PhoneInputScreen extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      'SMS yuborish',
+                      _isSubmitting ? 'Yuborilmoqda...' : 'SMS yuborish',
                       style: GoogleFonts.poppins(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
