@@ -26,9 +26,19 @@ class AuthService {
   // Send phone number to get verification code
   Future<bool> sendPhoneNumber(String phone) async {
     try {
-      // Mock API response since actual API isn't working
-      await Future.delayed(const Duration(seconds: 1));
-      return true;
+      final response = await http.post(
+        Uri.parse(baseUrl),
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: {'phone': phone},
+      );
+
+      final data = jsonDecode(response.body);
+      if (data['status'] == 'OK') {
+        return true;
+      } else {
+        print('Error: ${data['message']}');
+        return false;
+      }
     } catch (e) {
       print('Error sending phone number: $e');
       return false;
@@ -36,19 +46,31 @@ class AuthService {
   }
 
   // Verify phone number with code
-  Future<bool> verifyCode(String phone, String code) async {
+  Future<String?> verifyCode(String phone, String code) async {
     try {
-      // Mock API response since actual API isn't working
-      await Future.delayed(const Duration(seconds: 1));
-      if (code.length == 4) {
-        const mockToken = 'test_token_12345';
-        await _prefs.setString(tokenKey, mockToken);
-        return true;
+      // For testing: Accept any 4-digit code since backend isn't sending real codes
+      if (code.length != 4) {
+        return null;
       }
-      return false;
+
+      final response = await http.post(
+        Uri.parse(baseUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'phone': phone, 'sms_code': code}),
+      );
+
+      final data = jsonDecode(response.body);
+      if (data['status'] == 'OK' && data['data']['token'] != null) {
+        final token = data['data']['token'] as String;
+        await _saveToken(token);
+        return token;
+      } else {
+        print('Error: ${data['message']}');
+        return null;
+      }
     } catch (e) {
       print('Error verifying code: $e');
-      return false;
+      return null;
     }
   }
 
@@ -63,10 +85,7 @@ class AuthService {
       throw Exception('No token found');
     }
 
-    final headers = {
-      'Content-Type': 'application/json',
-      'Token': token,
-    };
+    final headers = {'Content-Type': 'application/json', 'Token': token};
 
     switch (method.toUpperCase()) {
       case 'GET':
