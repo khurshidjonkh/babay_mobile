@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'phone_input_screen.dart';
+import 'package:babay_mobile/presentation/screens/phone_input_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

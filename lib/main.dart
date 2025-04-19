@@ -1,3 +1,6 @@
+import 'package:babay_mobile/core/providers/profile_provider.dart';
+// import 'package:babay_mobile/presentation/screens/splash_screen.dart';
+import 'package:babay_mobile/presentation/screens/home_screen.dart';
 import 'package:babay_mobile/presentation/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,17 +18,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => locator<AuthProvider>(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => locator<AuthProvider>()),
+        ChangeNotifierProvider(create: (_) => locator<ProfileProvider>()),
+      ],
       child: MaterialApp(
-      title: 'BaBay',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.purple,
-        scaffoldBackgroundColor: Colors.white,
-        useMaterial3: true,
-      ),
-      home: const SplashScreen(),
+        title: 'BaBay',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.purple,
+          scaffoldBackgroundColor: Colors.white,
+          useMaterial3: true,
+        ),
+        home: const SplashScreen(),
       ),
     );
   }

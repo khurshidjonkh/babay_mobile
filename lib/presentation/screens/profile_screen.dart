@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:provider/provider.dart';
+import '../../core/providers/profile_provider.dart';
 import 'edit_profile_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Fetch profile data when screen loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProfileProvider>().fetchProfile(context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,37 +43,55 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.edit_outlined, color: Colors.black),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditProfileScreen(
-                    initialName: "ALisher Ro'ziqulov",
-                    initialPhone: "+99899 888 0808",
-                    initialEmail: "info@babay.org",
-                    initialBirthDate: DateTime(1998, 1, 1),
+          Consumer<ProfileProvider>(
+            builder: (context, provider, _) => IconButton(
+              icon: const Icon(Icons.edit_outlined, color: Colors.black),
+              onPressed: () {
+                if (provider.profile != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditProfileScreen(
+                      initialName: provider.profile!.name,
+                      initialPhone: provider.profile!.phone,
+                      initialEmail: provider.profile!.email,
+                      initialBirthDate: DateTime(1998, 1, 1), // You might want to add this to your profile model
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+                }
+              },
+            ),
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            children: [
-              const CircleAvatar(
+      body: Consumer<ProfileProvider>(
+        builder: (context, provider, child) {
+          if (provider.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final profile = provider.profile;
+          if (profile == null) {
+            return const Center(child: Text('No profile data available'));
+          }
+
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                children: [
+              CircleAvatar(
                 radius: 50,
                 backgroundColor: Colors.grey,
-                child: Icon(Icons.person, size: 50, color: Colors.white),
+                backgroundImage: profile.image != null ? NetworkImage(profile.image!) : null,
+                child: profile.image == null
+                    ? const Icon(Icons.person, size: 50, color: Colors.white)
+                    : null,
               ),
               const SizedBox(height: 16),
               Text(
-                'ALisher Ro\'ziqulov',
+                profile.name,
                 style: GoogleFonts.poppins(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
@@ -65,12 +99,12 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              _buildInfoRow(Icons.phone, '+99899 888 0808'),
+              _buildInfoRow(Icons.phone, profile.phone),
               const SizedBox(height: 12),
-              _buildInfoRow(Icons.email, 'info@babay.org'),
+              _buildInfoRow(Icons.email, profile.email),
               const SizedBox(height: 32),
               QrImageView(
-                data: '123456789', // Random QR code data for now
+                data: profile.id, // User's ID for QR code
                 version: QrVersions.auto,
                 size: 200.0,
               ),
@@ -84,9 +118,11 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-            ],
-          ),
-        ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

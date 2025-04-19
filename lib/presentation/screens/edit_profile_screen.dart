@@ -169,15 +169,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 text: 'Akkaundtan chiqish',
                 color: Colors.purple,
                 textColor: Colors.white,
-                onPressed: () {
-                  Provider.of<AuthProvider>(context, listen: false).logout();
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const PhoneInputScreen(),
-                    ),
-                  );
-                },
+                onPressed: () {},
               ),
               const SizedBox(height: 12),
               _buildActionButton(
