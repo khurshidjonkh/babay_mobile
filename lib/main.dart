@@ -1,11 +1,10 @@
 import 'package:babay_mobile/core/providers/profile_provider.dart';
-// import 'package:babay_mobile/presentation/screens/splash_screen.dart';
-import 'package:babay_mobile/presentation/screens/home_screen.dart';
 import 'package:babay_mobile/presentation/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'core/service_locator.dart';
 import 'core/providers/auth_provider.dart';
+import 'core/services/navigation_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +23,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => locator<ProfileProvider>()),
       ],
       child: MaterialApp(
+        navigatorKey: locator<NavigationService>().navigatorKey,
         title: 'BaBay',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

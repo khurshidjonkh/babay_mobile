@@ -53,24 +53,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         actions: [
           Consumer<ProfileProvider>(
-            builder: (context, provider, _) => IconButton(
-              icon: const Icon(Icons.edit_outlined, color: Colors.black),
-              onPressed: () {
-                if (provider.profile != null) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditProfileScreen(
-                      initialName: provider.profile!.name,
-                      initialPhone: provider.profile!.phone,
-                      initialEmail: provider.profile!.email,
-                      initialBirthDate: DateTime(1998, 1, 1), // You might want to add this to your profile model
-                    ),
-                  ),
-                );
-                }
-              },
-            ),
+            builder:
+                (context, provider, _) => IconButton(
+                  icon: const Icon(Icons.edit_outlined, color: Colors.black),
+                  onPressed: () {
+                    if (provider.profile != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) => EditProfileScreen(
+                                initialName: provider.profile!.name,
+                                initialPhone: provider.profile!.phone,
+                                initialEmail: provider.profile!.email,
+                                initialBirthDate: DateTime(
+                                  1998,
+                                  1,
+                                  1,
+                                ), // You might want to add this to your profile model
+                              ),
+                        ),
+                      );
+                    }
+                  },
+                ),
           ),
         ],
       ),
@@ -90,43 +96,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.all(24.0),
               child: Column(
                 children: [
-              CircleAvatar(
-                radius: 50,
-                backgroundColor: Colors.grey,
-                backgroundImage: profile.image != null ? NetworkImage(profile.image!) : null,
-                child: profile.image == null
-                    ? const Icon(Icons.person, size: 50, color: Colors.white)
-                    : null,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                profile.name,
-                style: GoogleFonts.poppins(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 24),
-              _buildInfoRow(Icons.phone, profile.phone),
-              const SizedBox(height: 12),
-              _buildInfoRow(Icons.email, profile.email),
-              const SizedBox(height: 32),
-              QrImageView(
-                data: profile.id, // User's ID for QR code
-                version: QrVersions.auto,
-                size: 200.0,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Cashback olish uchun QR kodni kassirga ko\'rsating',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Colors.purple,
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.center,
-              ),
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.grey,
+                    backgroundImage:
+                        profile.image != null
+                            ? NetworkImage(profile.image!)
+                            : null,
+                    child:
+                        profile.image == null
+                            ? const Icon(
+                              Icons.person,
+                              size: 50,
+                              color: Colors.white,
+                            )
+                            : null,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    profile.name,
+                    style: GoogleFonts.poppins(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  _buildInfoRow(Icons.phone, profile.phone),
+                  const SizedBox(height: 12),
+                  _buildInfoRow(Icons.email, profile.email),
+                  const SizedBox(height: 32),
+                  QrImageView(
+                    data: profile.id, // User's ID for QR code
+                    version: QrVersions.auto,
+                    size: 200.0,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Cashback olish uchun QR kodni kassirga ko\'rsating',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: Colors.purple,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ],
               ),
             ),

@@ -13,18 +13,29 @@ class AuthService {
   // Get saved JWT token
   String? get token {
     final savedToken = _prefs.getString(tokenKey);
-    print('Retrieved token: $savedToken'); // Debug log
-    return savedToken;
+    if (savedToken != null) {
+      // Ensure token is clean without any Bearer prefix
+      final cleanToken = savedToken.trim().replaceAll('Bearer ', '');
+      print('Retrieved and cleaned token: $cleanToken'); // Debug log
+      return cleanToken;
+    }
+    print('No token found in storage'); // Debug log
+    return null;
   }
 
   // Save JWT token
   Future<void> _saveToken(String token) async {
-    print('Saving token: $token'); // Debug log
-    await _prefs.setString(tokenKey, token); // Save the token
-    final savedToken = _prefs.getString(
-      tokenKey,
-    ); // Retrieve the token to verify
+    // Clean the token before saving (remove Bearer if present)
+    final cleanToken = token.trim().replaceAll('Bearer ', '');
+    print('Saving cleaned token: $cleanToken'); // Debug log
+    
+    await _prefs.setString(tokenKey, cleanToken);
+    final savedToken = _prefs.getString(tokenKey);
     print('Verified saved token: $savedToken'); // Debug log
+    
+    if (savedToken != cleanToken) {
+      print('WARNING: Token verification failed! Saved token does not match original');
+    }
   }
 
   // Clear JWT token (for logout)
@@ -99,7 +110,7 @@ class AuthService {
 
     final headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Token': token,
+      'Authorization': 'Bearer ${token.trim()}',
     };
 
     switch (method.toUpperCase()) {
