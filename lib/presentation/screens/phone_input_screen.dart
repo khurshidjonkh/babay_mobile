@@ -35,7 +35,9 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     try {
-      final success = await authProvider.sendPhoneNumber('998${_phoneController.text}');
+      final success = await authProvider.sendPhoneNumber(
+        '998${_phoneController.text}',
+      );
       if (success) {
         if (!mounted) return;
         Navigator.push(
@@ -47,9 +49,9 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
       } else if (!mounted) {
         return;
       } else if (authProvider.error != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(authProvider.error!)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(authProvider.error!)));
       }
     } finally {
       if (mounted) {
@@ -116,7 +118,8 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: _isSubmitting ? null : () => _handleSubmit(context),
+                    onPressed:
+                        _isSubmitting ? null : () => _handleSubmit(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF9C27B0),
                       foregroundColor: Colors.white,

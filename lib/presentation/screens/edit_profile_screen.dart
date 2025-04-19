@@ -1,7 +1,10 @@
 import 'dart:io';
+import 'package:babay_mobile/core/providers/auth_provider.dart';
+import 'package:babay_mobile/presentation/screens/phone_input_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final String initialName;
@@ -107,7 +110,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: _hasChanged ? () {/* Save logic here */} : null,
+            onPressed:
+                _hasChanged
+                    ? () {
+                      /* Save logic here */
+                    }
+                    : null,
             child: Text(
               'Saqlash',
               style: GoogleFonts.poppins(
@@ -130,19 +138,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   backgroundColor: Colors.purple.shade100,
                   backgroundImage:
                       _pickedImage != null ? FileImage(_pickedImage!) : null,
-                  child: _pickedImage == null
-                      ? const Icon(Icons.person, size: 50, color: Colors.white)
-                      : null,
+                  child:
+                      _pickedImage == null
+                          ? const Icon(
+                            Icons.person,
+                            size: 50,
+                            color: Colors.white,
+                          )
+                          : null,
                 ),
               ),
               const SizedBox(height: 16),
               _buildTextField('FIO', nameController),
               const SizedBox(height: 16),
-              _buildTextField('Telefon', phoneController,
-                  keyboardType: TextInputType.phone),
+              _buildTextField(
+                'Telefon',
+                phoneController,
+                keyboardType: TextInputType.phone,
+              ),
               const SizedBox(height: 16),
-              _buildTextField('Email', emailController,
-                  keyboardType: TextInputType.emailAddress),
+              _buildTextField(
+                'Email',
+                emailController,
+                keyboardType: TextInputType.emailAddress,
+              ),
               const SizedBox(height: 16),
               _buildBirthDateField(),
               const SizedBox(height: 32),
@@ -150,7 +169,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 text: 'Akkaundtan chiqish',
                 color: Colors.purple,
                 textColor: Colors.white,
-                onPressed: () {},
+                onPressed: () {
+                  Provider.of<AuthProvider>(context, listen: false).logout();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PhoneInputScreen(),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 12),
               _buildActionButton(
@@ -166,8 +193,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller,
-      {TextInputType keyboardType = TextInputType.text}) {
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller, {
+    TextInputType keyboardType = TextInputType.text,
+  }) {
     return TextField(
       controller: controller,
       keyboardType: keyboardType,
@@ -240,10 +270,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         onPressed: onPressed,
         child: Text(
           text,
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w500,
-            fontSize: 16,
-          ),
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 16),
         ),
       ),
     );

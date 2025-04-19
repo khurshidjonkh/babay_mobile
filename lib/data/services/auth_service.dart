@@ -29,7 +29,7 @@ class AuthService {
       final response = await http.post(
         Uri.parse(baseUrl),
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: {'phone': phone},
+        body: {'phone': phone}, // Use form data as is
       );
 
       final data = jsonDecode(response.body);
@@ -55,8 +55,11 @@ class AuthService {
 
       final response = await http.post(
         Uri.parse(baseUrl),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'phone': phone, 'sms_code': code}),
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: {
+          'phone': phone,
+          'sms_code': code,
+        }, // Use form data instead of jsonEncode
       );
 
       final data = jsonDecode(response.body);
