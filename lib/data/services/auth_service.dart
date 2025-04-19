@@ -14,10 +14,8 @@ class AuthService {
   String? get token {
     final savedToken = _prefs.getString(tokenKey);
     if (savedToken != null) {
-      // Ensure token is clean without any Bearer prefix
-      final cleanToken = savedToken.trim().replaceAll('Bearer ', '');
-      print('Retrieved and cleaned token: $cleanToken'); // Debug log
-      return cleanToken;
+      print('Retrieved raw token: $savedToken'); // Debug log
+      return savedToken;
     }
     print('No token found in storage'); // Debug log
     return null;
@@ -25,16 +23,17 @@ class AuthService {
 
   // Save JWT token
   Future<void> _saveToken(String token) async {
-    // Clean the token before saving (remove Bearer if present)
-    final cleanToken = token.trim().replaceAll('Bearer ', '');
-    print('Saving cleaned token: $cleanToken'); // Debug log
-    
+    final cleanToken = token.trim();
+    print('Saving token: $cleanToken'); // Debug log
+
     await _prefs.setString(tokenKey, cleanToken);
     final savedToken = _prefs.getString(tokenKey);
     print('Verified saved token: $savedToken'); // Debug log
-    
+
     if (savedToken != cleanToken) {
-      print('WARNING: Token verification failed! Saved token does not match original');
+      print(
+        'WARNING: Token verification failed! Saved token does not match original',
+      );
     }
   }
 
@@ -84,9 +83,10 @@ class AuthService {
 
       final data = jsonDecode(response.body);
       if (data['status'] == 'OK' && data['data']['token'] != null) {
-        final token = data['data']['token'] as String;
-        await _saveToken(token);
-        return token;
+        final rawToken = data['data']['token'] as String;
+        // Save raw token without Bearer prefix
+        await _saveToken(rawToken);
+        return 'Bearer $rawToken';
       } else {
         print('Error: ${data['message']}');
         return null;
@@ -110,7 +110,7 @@ class AuthService {
 
     final headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Bearer ${token.trim()}',
+      'Authorization': token, // token already includes Bearer prefix
     };
 
     switch (method.toUpperCase()) {

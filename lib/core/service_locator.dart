@@ -22,19 +22,19 @@ Future<void> setupServiceLocator() async {
   // Register AuthProvider
   locator.registerSingleton<AuthProvider>(AuthProvider(locator<AuthService>()));
 
-  // Register ProfileService
-  locator.registerSingleton<ProfileService>(ProfileService());
-
-  // Register ProfileProvider
-  locator.registerSingleton<ProfileProvider>(
-    ProfileProvider(locator<ProfileService>()),
-  );
-
   // Register NavigationService
   locator.registerSingleton<NavigationService>(NavigationService());
 
   // Register HttpClientWrapper
   locator.registerSingleton<HttpClientWrapper>(
     HttpClientWrapper(locator<AuthService>(), locator<NavigationService>()),
+  );
+
+  // Register ProfileService
+  locator.registerSingleton<ProfileService>(ProfileService());
+
+  // Register ProfileProvider
+  locator.registerSingleton<ProfileProvider>(
+    ProfileProvider(locator<ProfileService>()),
   );
 }

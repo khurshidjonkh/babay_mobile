@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:babay_mobile/core/service_locator.dart';
 import 'package:babay_mobile/data/models/user_profile.dart';
 import 'package:babay_mobile/data/services/auth_service.dart';
@@ -8,18 +9,34 @@ class ProfileService {
 
   Future<UserProfile> fetchProfile() async {
     try {
-      // Debug: Print token before making request
-      final token = locator<AuthService>().token;
-      print('Attempting to fetch profile with token: $token');
+      final rawToken = locator<AuthService>().token;
+      print('Debug - Raw token: $rawToken');
 
-      final response = await locator<AuthService>().authenticatedRequest(
-        'GET',
-        baseUrl,
-        body: {'Lang': 'en'},
+      if (rawToken == null) {
+        throw Exception('No token available');
+      }
+
+      // Use the dynamic token with Bearer prefix
+      final formattedToken = 'Bearer $rawToken';
+      print('Debug - Formatted token: $formattedToken');
+
+      final response = await http.get(
+        Uri.parse(baseUrl),
+        headers: {
+          'Authorization': formattedToken,
+          'Accept': 'application/json',
+          'Lang': 'en',
+        },
       );
 
+      print('\n=== Profile API Response ===');
+      print('Status Code: ${response.statusCode}');
+      print('Response Headers:');
+      response.headers.forEach((key, value) => print('$key: $value'));
+      print('Response Body: ${response.body}');
+      print('========================\n');
+
       final data = json.decode(response.body);
-      print('Profile API Response: $data'); // Debug log
 
       if (response.statusCode == 200) {
         if (data['status'] == 'OK' && data['data'] != null) {

@@ -16,60 +16,12 @@ class HttpClientWrapper {
 
     print('Raw token from AuthService: $token'); // Debug log
 
-    // Ensure token format
-    final cleanToken = token.trim().replaceAll('Bearer ', '');
-    final authHeaders = {'Authorization': 'Bearer $cleanToken'};
-    print(
-      'Formatted Authorization header: ${authHeaders['Authorization']}',
-    ); // Debug log
-    return headers != null ? {...headers, ...authHeaders} : authHeaders;
-  }
+    final authHeaders = {'Authorization': token};
+    print('Authorization header: ${authHeaders['Authorization']}'); // Debug log
 
-  Future<http.Response> get(String url, {Map<String, String>? headers}) async {
-    try {
-      final finalHeaders = _addAuthHeader(headers);
-      
-      // Print complete request details
-      print('\n=== HTTP Request ===');
-      print('URL: $url');
-      print('Method: GET');
-      finalHeaders.forEach((key, value) {
-        print('Header - $key: $value');
-      });
-      print('==================\n');
-      
-      final response = await http.get(
-        Uri.parse(url),
-        headers: finalHeaders,
-      );
-      // Print complete response details
-      print('\n=== HTTP Response ===');
-      print('Status Code: ${response.statusCode}');
-      print('Response Headers:');
-      response.headers.forEach((key, value) {
-        print('$key: $value');
-      });
-      print('Response Body: ${response.body}');
-      print('==================\n');
-
-      if (response.statusCode == 403) {
-        final data = json.decode(response.body);
-        print('Token error: ${data['message']}');
-
-        // Clear token
-        await _authService.clearToken();
-
-        // Navigate to phone input screen
-        await _navigationService.navigateToReplacement(
-          const PhoneInputScreen(),
-        );
-      }
-
-      return response;
-    } catch (e) {
-      print('HTTP Error: $e');
-      rethrow;
-    }
+    // Merge headers, giving priority to auth headers
+    final mergedHeaders = {...(headers ?? {}), ...authHeaders};
+    return mergedHeaders;
   }
 
   Future<http.Response> post(
@@ -80,8 +32,7 @@ class HttpClientWrapper {
   }) async {
     try {
       final finalHeaders = _addAuthHeader(headers);
-      
-      // Print complete request details
+
       print('\n=== HTTP Request ===');
       print('URL: $url');
       print('Method: POST');
@@ -100,13 +51,9 @@ class HttpClientWrapper {
         encoding: encoding,
       );
 
-      // Print complete response details
       print('\n=== HTTP Response ===');
       print('Status Code: ${response.statusCode}');
-      print('Response Headers:');
-      response.headers.forEach((key, value) {
-        print('$key: $value');
-      });
+      print('Response Headers: ${response.headers}');
       print('Response Body: ${response.body}');
       print('==================\n');
 
@@ -114,7 +61,7 @@ class HttpClientWrapper {
         final data = json.decode(response.body);
         print('Token error: ${data['message']}');
 
-        // Clear token
+        // Clear token if expired/invalid
         await _authService.clearToken();
 
         // Navigate to phone input screen
