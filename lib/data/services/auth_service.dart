@@ -11,11 +11,20 @@ class AuthService {
   AuthService(this._prefs);
 
   // Get saved JWT token
-  String? get token => _prefs.getString(tokenKey);
+  String? get token {
+    final savedToken = _prefs.getString(tokenKey);
+    print('Retrieved token: $savedToken'); // Debug log
+    return savedToken;
+  }
 
   // Save JWT token
   Future<void> _saveToken(String token) async {
-    await _prefs.setString(tokenKey, token);
+    print('Saving token: $token'); // Debug log
+    await _prefs.setString(tokenKey, token); // Save the token
+    final savedToken = _prefs.getString(
+      tokenKey,
+    ); // Retrieve the token to verify
+    print('Verified saved token: $savedToken'); // Debug log
   }
 
   // Clear JWT token (for logout)
@@ -88,7 +97,10 @@ class AuthService {
       throw Exception('No token found');
     }
 
-    final headers = {'Content-Type': 'application/json', 'Token': token};
+    final headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Token': token,
+    };
 
     switch (method.toUpperCase()) {
       case 'GET':
@@ -97,7 +109,8 @@ class AuthService {
         return http.post(
           Uri.parse(endpoint),
           headers: headers,
-          body: body != null ? jsonEncode(body) : null,
+          body:
+              body, // body should already be Map<String, String> for form-urlencoded
         );
       default:
         throw Exception('Unsupported HTTP method: $method');

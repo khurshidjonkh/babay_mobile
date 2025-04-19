@@ -1,10 +1,7 @@
 import 'dart:io';
-import 'package:babay_mobile/core/providers/auth_provider.dart';
-import 'package:babay_mobile/presentation/screens/phone_input_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final String initialName;

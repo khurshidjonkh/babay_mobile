@@ -25,10 +25,7 @@ class ProfileProvider extends ChangeNotifier {
     } catch (e) {
       _error = e.toString();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(_error!),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(_error!), backgroundColor: Colors.red),
       );
     } finally {
       _isLoading = false;
