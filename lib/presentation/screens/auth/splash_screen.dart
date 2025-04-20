@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:babay_mobile/core/providers/auth_provider.dart';
 import 'package:babay_mobile/presentation/screens/home_screen.dart';
-import 'package:babay_mobile/presentation/screens/phone_input_screen.dart';
+import 'package:babay_mobile/presentation/screens/auth/phone_input_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen>
     _animationController.forward();
 
     // Check auth status and navigate after splash animation
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 2), () {
       if (!mounted) return;
 
       final authProvider = Provider.of<AuthProvider>(context, listen: false);

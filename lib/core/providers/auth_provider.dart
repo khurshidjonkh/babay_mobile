@@ -1,5 +1,5 @@
+import 'package:babay_mobile/data/services/auth_service.dart';
 import 'package:flutter/foundation.dart';
-import '../../data/services/auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final AuthService _authService;
@@ -23,9 +23,9 @@ class AuthProvider extends ChangeNotifier {
       final result = await _authService.sendPhoneNumber(phone);
       _isLoading = false;
       if (result) {
-        phoneNumber = phone; // Save phone number on success
+        phoneNumber = phone;
       } else {
-        _error = 'Failed to send verification code';
+        _error = 'Tasdiqlash kodini yuborib bo\'lmadi';
       }
       notifyListeners();
       return result;
@@ -40,7 +40,7 @@ class AuthProvider extends ChangeNotifier {
   // Verify phone number with code
   Future<bool> verifyCode(String code) async {
     if (phoneNumber == null) {
-      _error = 'Phone number not found';
+      _error = 'Telefon raqami topilmadi';
       notifyListeners();
       return false;
     }
@@ -53,7 +53,7 @@ class AuthProvider extends ChangeNotifier {
       final token = await _authService.verifyCode(phoneNumber!, code);
       _isLoading = false;
       if (token == null) {
-        _error = 'Invalid verification code';
+        _error = 'Tasdiqlash kodi noto\'g\'i';
         notifyListeners();
         return false;
       }
