@@ -1,25 +1,37 @@
 class UserProfile {
   final String id;
   final String name;
-  final String phone;
+  final String lastName;
   final String email;
-  final String? image;
+  final String? photo;
+  final String phone;
+  final String? birthday;
+  final String? birthdayDate;
+  final String gender;
 
   UserProfile({
     required this.id,
     required this.name,
-    required this.phone,
+    required this.lastName,
     required this.email,
-    this.image,
+    this.photo,
+    required this.phone,
+    this.birthday,
+    this.birthdayDate,
+    required this.gender,
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
       id: json['id']?.toString() ?? '',
       name: json['name']?.toString() ?? '',
-      phone: json['phone']?.toString() ?? '',
+      lastName: json['last_name']?.toString() ?? '',
       email: json['email']?.toString() ?? '',
-      image: json['image']?.toString(),
+      photo: json['personal_photo']?.toString(),
+      phone: json['personal_phone']?.toString() ?? '',
+      birthday: json['personal_birthday']?.toString(),
+      birthdayDate: json['personal_birthday_date']?.toString(),
+      gender: json['personal_gender']?.toString() ?? '',
     );
   }
 }
