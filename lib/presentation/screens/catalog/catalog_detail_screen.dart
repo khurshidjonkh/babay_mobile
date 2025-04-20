@@ -1,4 +1,4 @@
-import 'package:babay_mobile/presentation/screens/payment_screen.dart';
+import 'package:babay_mobile/presentation/screens/catalog/payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

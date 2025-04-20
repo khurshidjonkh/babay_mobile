@@ -1,5 +1,5 @@
 import 'package:babay_mobile/presentation/screens/qr_scanner_screen.dart';
-import 'package:babay_mobile/presentation/screens/search_screen.dart';
+import 'package:babay_mobile/presentation/screens/catalog/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';

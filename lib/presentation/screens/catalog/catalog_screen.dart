@@ -5,11 +5,14 @@ import 'catalog_detail_screen.dart';
 class CatalogScreen extends StatelessWidget {
   CatalogScreen({super.key});
 
-  final List<Map<String, dynamic>> items = List.generate(10, (index) => {
-    'label': index % 2 == 0 ? 'Deluxe Spa' : 'Nigina Spa',
-    'icon': Icons.spa,
-    // Replace with your real image asset or network path later
-  });
+  final List<Map<String, dynamic>> items = List.generate(
+    10,
+    (index) => {
+      'label': index % 2 == 0 ? 'Deluxe Spa' : 'Nigina Spa',
+      'icon': Icons.spa,
+      // Replace with your real image asset or network path later
+    },
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -78,10 +81,11 @@ class CatalogScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CatalogDetailScreen(
-                          label: item['label'],
-                          icon: item['icon'],
-                        ),
+                        builder:
+                            (context) => CatalogDetailScreen(
+                              label: item['label'],
+                              icon: item['icon'],
+                            ),
                       ),
                     );
                   },
@@ -94,11 +98,7 @@ class CatalogScreen extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          item['icon'],
-                          size: 56,
-                          color: Colors.purple,
-                        ),
+                        Icon(item['icon'], size: 56, color: Colors.purple),
                         const SizedBox(height: 12),
                         Text(
                           item['label'],
