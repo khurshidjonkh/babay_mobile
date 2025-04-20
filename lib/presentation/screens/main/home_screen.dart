@@ -1,11 +1,11 @@
 import 'package:babay_mobile/presentation/screens/business/qr_scanner_screen.dart';
 import 'package:babay_mobile/presentation/screens/catalog/search_screen.dart';
+import 'package:babay_mobile/presentation/screens/main/notifications_screen.dart';
+import 'package:babay_mobile/presentation/screens/main/widgets/coupon_details_sheet.dart';
+import 'package:babay_mobile/presentation/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'widgets/coupon_details_sheet.dart';
-import 'notifications_screen.dart';
-import '../profile/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -110,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.search, color: Colors.black),
+          icon: const Icon(Icons.search_rounded, color: Colors.black87),
           onPressed: () {
             Navigator.push(
               context,
@@ -120,7 +120,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications_outlined, color: Colors.black),
+            icon: const Icon(
+              Icons.notifications_none_rounded,
+              color: Colors.black87,
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -131,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.language, color: Colors.black),
+            icon: const Icon(Icons.language_rounded, color: Colors.black87),
             onPressed: () {
               showCupertinoModalBottomSheet(
                 context: context,
@@ -172,7 +175,10 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.person_outline, color: Colors.black),
+            icon: const Icon(
+              Icons.person_outline_rounded,
+              color: Colors.black87,
+            ),
             onPressed: () {
               Navigator.push(
                 context,
