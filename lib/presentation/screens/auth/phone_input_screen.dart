@@ -1,5 +1,6 @@
 import 'package:babay_mobile/core/providers/auth_provider.dart';
 import 'package:babay_mobile/presentation/screens/auth/sms_verification_screen.dart';
+import 'package:babay_mobile/presentation/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -96,7 +97,11 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
               const SizedBox(height: 40),
               _buildPhoneInput(),
               const SizedBox(height: 32),
-              _buildSubmitButton(),
+              PrimaryButton(
+                text: 'SMS yuborish',
+                onPressed: _handleSubmit,
+                isLoading: _isSubmitting,
+              ),
             ],
           ),
         ),
@@ -168,43 +173,6 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
           errorStyle: GoogleFonts.poppins(fontSize: 12, color: Colors.red),
         ),
-      ),
-    );
-  }
-
-  Widget _buildSubmitButton() {
-    return SizedBox(
-      width: double.infinity,
-      height: 56,
-      child: ElevatedButton(
-        onPressed: _isSubmitting ? null : _handleSubmit,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.purple,
-          foregroundColor: Colors.white,
-          elevation: 2,
-          shadowColor: Colors.purple.withValues(alpha: 0.3),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 16),
-        ),
-        child:
-            _isSubmitting
-                ? const SizedBox(
-                  height: 24,
-                  width: 24,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 3,
-                  ),
-                )
-                : Text(
-                  'SMS yuborish',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
       ),
     );
   }
