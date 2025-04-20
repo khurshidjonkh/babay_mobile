@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:babay_mobile/core/providers/auth_provider.dart';
-import 'package:babay_mobile/presentation/screens/home_screen.dart';
+import 'package:babay_mobile/presentation/screens/main/home_screen.dart';
 import 'package:babay_mobile/presentation/screens/auth/phone_input_screen.dart';
 
 class SplashScreen extends StatefulWidget {

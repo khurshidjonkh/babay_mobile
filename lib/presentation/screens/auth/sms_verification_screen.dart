@@ -1,5 +1,5 @@
 import 'package:babay_mobile/core/providers/auth_provider.dart';
-import 'package:babay_mobile/presentation/screens/home_screen.dart';
+import 'package:babay_mobile/presentation/screens/main/home_screen.dart';
 import 'package:babay_mobile/presentation/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

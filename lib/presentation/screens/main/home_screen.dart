@@ -1,11 +1,11 @@
-import 'package:babay_mobile/presentation/screens/qr_scanner_screen.dart';
+import 'package:babay_mobile/presentation/screens/business/qr_scanner_screen.dart';
 import 'package:babay_mobile/presentation/screens/catalog/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import '../widgets/coupon_details_sheet.dart';
+import '../../widgets/coupon_details_sheet.dart';
 import 'notifications_screen.dart';
-import 'profile/profile_screen.dart';
+import '../profile/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
