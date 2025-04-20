@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:provider/provider.dart';
-import '../../core/providers/auth_provider.dart';
-import '../../core/providers/profile_provider.dart';
+import '../../../core/providers/auth_provider.dart';
+import '../../../core/providers/profile_provider.dart';
 import 'edit_profile_screen.dart';
-import 'phone_input_screen.dart';
+import '../auth/phone_input_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -100,11 +100,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     radius: 50,
                     backgroundColor: Colors.grey,
                     backgroundImage:
-                        profile.image != null
-                            ? NetworkImage(profile.image!)
+                        profile.photo != null
+                            ? NetworkImage(profile.photo!)
                             : null,
                     child:
-                        profile.image == null
+                        profile.photo == null
                             ? const Icon(
                               Icons.person,
                               size: 50,
