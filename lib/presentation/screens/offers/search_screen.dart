@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'offers/offers_screen.dart';
+import 'catalog_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});

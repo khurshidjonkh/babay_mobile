@@ -61,30 +61,39 @@ class CatalogDetailScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    '${oldPrice.toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]},")} UZS',
-                    style: GoogleFonts.poppins(
-                      color: Colors.grey,
-                      fontSize: 16,
-                      decoration: TextDecoration.lineThrough,
+                  Flexible(
+                    child: Text(
+                      '${oldPrice.toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]},")} UZS',
+                      style: GoogleFonts.poppins(
+                        color: Colors.grey,
+                        fontSize: 16,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    '${newPrice.toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]},")} UZS',
-                    style: GoogleFonts.poppins(
-                      color: Colors.purple,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                  Flexible(
+                    child: Text(
+                      '${newPrice.toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]},")} UZS',
+                      style: GoogleFonts.poppins(
+                        color: Colors.purple,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    discount,
-                    style: GoogleFonts.poppins(
-                      color: Colors.purple,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
+                  Flexible(
+                    child: Text(
+                      discount,
+                      style: GoogleFonts.poppins(
+                        color: Colors.purple,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'offers_detail_screen.dart';
+import 'catalog_detail_screen.dart';
 
 class CatalogScreen extends StatelessWidget {
   CatalogScreen({super.key});
