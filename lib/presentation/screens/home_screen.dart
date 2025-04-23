@@ -6,11 +6,21 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import '../widgets/coupon_details_sheet.dart';
 import 'notifications_screen.dart';
 import 'profile/profile_screen.dart';
+import 'dart:ui';
+import 'package:flutter/services.dart';
 
 // Constants for card dimensions and visibility
-const cardHeight = 160.0;
+const cardHeight = 180.0;
 const topVisiblePartOfEachCard =
-    cardHeight * 0.5; // How much of each card is visible initially
+    cardHeight * 0.55; // How much of each card is visible initially
+
+// App theme colors
+const Color primaryColor = Color(0xFF6A1B9A);
+const Color secondaryColor = Color(0xFF9C27B0);
+const Color accentColor = Color(0xFFE1BEE7);
+const Color backgroundColor = Color(0xFFF5F5F5);
+const Color textPrimaryColor = Color(0xFF212121);
+const Color textSecondaryColor = Color(0xFF757575);
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,9 +29,28 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   bool isFaolSelected = true;
   final _dragValue = ValueNotifier<double>(0);
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      setState(() {
+        isFaolSelected = _tabController.index == 0;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   final List<Map<String, dynamic>> coupons = [
     {
@@ -34,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'name': 'Korzinka',
       'logo': 'assets/images/korzinka.png',
       'amount': 50000.0,
-      'color': const Color(0xFF9C27B0),
+      'color': const Color.fromARGB(255, 230, 136, 194),
     },
     {
       'name': 'Qanotchi',
@@ -129,80 +158,139 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Set system overlay style for status bar
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    );
+
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.search, color: Colors.black),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SearchScreen()),
-            );
-          },
+
+        centerTitle: true,
+        leading: Container(
+          margin: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: accentColor.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.search, color: primaryColor),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SearchScreen()),
+              );
+            },
+            iconSize: 20,
+            padding: EdgeInsets.zero,
+          ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined, color: Colors.black),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const NotificationsScreen(),
-                ),
-              );
-            },
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 4),
+            decoration: BoxDecoration(
+              color: accentColor.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: IconButton(
+              icon: const Icon(
+                Icons.notifications_outlined,
+                color: primaryColor,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NotificationsScreen(),
+                  ),
+                );
+              },
+              iconSize: 20,
+              padding: EdgeInsets.zero,
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.language, color: Colors.black),
-            onPressed: () {
-              showCupertinoModalBottomSheet(
-                context: context,
-                builder:
-                    (context) => Material(
-                      color: Colors.white,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ListTile(
-                            leading: Text('🇺🇿'),
-                            title: Text('Uzbek'),
-                            onTap: () {
-                              Navigator.pop(context, 'uz');
-                              // Set language here
-                            },
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 4),
+            decoration: BoxDecoration(
+              color: accentColor.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.language, color: primaryColor),
+              onPressed: () {
+                showCupertinoModalBottomSheet(
+                  context: context,
+                  backgroundColor: Colors.transparent,
+                  builder:
+                      (context) => BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(20),
+                            ),
                           ),
-                          ListTile(
-                            leading: Text('🇷🇺'),
-                            title: Text('Russian'),
-                            onTap: () {
-                              Navigator.pop(context, 'ru');
-                              // Set language here
-                            },
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 40,
+                                height: 4,
+                                margin: const EdgeInsets.only(bottom: 20),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade300,
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
+                              ),
+                              Text(
+                                'Choose Language',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: textPrimaryColor,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              _buildLanguageOption('🇺🇿', 'Uzbek', 'uz'),
+                              _buildLanguageOption('🇷🇺', 'Russian', 'ru'),
+                              _buildLanguageOption('🇬🇧', 'English', 'en'),
+                            ],
                           ),
-                          ListTile(
-                            leading: Text('🇬🇧'),
-                            title: Text('English'),
-                            onTap: () {
-                              Navigator.pop(context, 'en');
-                              // Set language here
-                            },
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-              );
-            },
+                );
+              },
+              iconSize: 20,
+              padding: EdgeInsets.zero,
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.person_outline, color: Colors.black),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProfileScreen()),
-              );
-            },
+          Container(
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: accentColor.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.person_outline, color: primaryColor),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ProfileScreen(),
+                  ),
+                );
+              },
+              iconSize: 20,
+              padding: EdgeInsets.zero,
+            ),
           ),
         ],
       ),
@@ -220,7 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextButton.styleFrom(
                       backgroundColor:
                           isFaolSelected
-                              ? Colors.purple.shade300
+                              ? Colors.purple.shade500
                               : Colors.grey.shade50,
                     ),
                     child: Text(
@@ -243,7 +331,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextButton.styleFrom(
                       backgroundColor:
                           !isFaolSelected
-                              ? Colors.purple.shade300
+                              ? Colors.purple.shade500
                               : Colors.grey.shade50,
                     ),
                     child: Text(
@@ -261,55 +349,78 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           if (isFaolSelected)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: OutlinedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const QRScannerScreen(),
-                    ),
-                  );
-                },
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 48),
-                  side: const BorderSide(color: Colors.grey),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16.0),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [primaryColor, secondaryColor],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: primaryColor.withOpacity(0.5),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const QRScannerScreen(),
                       ),
-                      decoration: BoxDecoration(
-                        color: Colors.orange,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        'BaBay',
-                        style: GoogleFonts.poppins(
+                    );
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.qr_code_scanner,
                           color: Colors.white,
-                          fontSize: 12,
+                          size: 24,
                         ),
-                      ),
+                        const SizedBox(width: 12),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.orange,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            'BaBay',
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Business Scanner',
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Business',
-                      style: GoogleFonts.poppins(
-                        color: Colors.black,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -353,58 +464,97 @@ class _HomeScreenState extends State<HomeScreen> {
                               final index = entry.key;
                               final coupon = entry.value;
                               return AnimatedPositioned(
-                                curve: Curves.decelerate,
-                                duration: const Duration(milliseconds: 150),
+                                curve: Curves.easeOutBack,
+                                duration: const Duration(milliseconds: 300),
                                 top: index * (topVisiblePartOfEachCard + value),
                                 left: 16,
                                 right: 16,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    // Show coupon details
-                                    if (isFaolSelected) {
-                                      showCupertinoModalBottomSheet(
-                                        context: context,
-                                        builder:
-                                            (context) => CouponDetailsSheet(
-                                              coupon: coupon,
-                                            ),
-                                      );
-                                    }
-                                  },
-                                  onLongPress: () {
-                                    if (isFaolSelected) {
-                                      showCupertinoModalBottomSheet(
-                                        context: context,
-                                        builder:
-                                            (context) => CouponDetailsSheet(
-                                              coupon: coupon,
-                                            ),
-                                      );
-                                    }
-                                  },
-                                  child: Container(
-                                    height: cardHeight,
-                                    decoration: BoxDecoration(
-                                      color: coupon['color'],
+                                child: Hero(
+                                  tag: 'coupon_${coupon['name']}_$index',
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      onTap: () {
+                                        // Show coupon details with improved animation
+                                        if (isFaolSelected) {
+                                          HapticFeedback.lightImpact();
+                                          showCupertinoModalBottomSheet(
+                                            context: context,
+                                            backgroundColor: Colors.transparent,
+                                            builder:
+                                                (context) => BackdropFilter(
+                                                  filter: ImageFilter.blur(
+                                                    sigmaX: 5,
+                                                    sigmaY: 5,
+                                                  ),
+                                                  child: CouponDetailsSheet(
+                                                    coupon: coupon,
+                                                  ),
+                                                ),
+                                          );
+                                        }
+                                      },
+                                      onLongPress: () {
+                                        if (isFaolSelected) {
+                                          HapticFeedback.mediumImpact();
+                                          showCupertinoModalBottomSheet(
+                                            context: context,
+                                            backgroundColor: Colors.transparent,
+                                            builder:
+                                                (context) => BackdropFilter(
+                                                  filter: ImageFilter.blur(
+                                                    sigmaX: 5,
+                                                    sigmaY: 5,
+                                                  ),
+                                                  child: CouponDetailsSheet(
+                                                    coupon: coupon,
+                                                  ),
+                                                ),
+                                          );
+                                        }
+                                      },
                                       borderRadius: BorderRadius.circular(16),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
-                                          blurRadius: 8,
-                                          offset: const Offset(0, 4),
+                                      child: Ink(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              coupon['color'],
+                                              Color.lerp(
+                                                    coupon['color'],
+                                                    Colors.white,
+                                                    0.2,
+                                                  ) ??
+                                                  coupon['color'],
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: coupon['color']
+                                                  .withOpacity(0.3),
+                                              blurRadius: 12,
+                                              offset: const Offset(0, 6),
+                                              spreadRadius: 2,
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16),
-                                      child:
-                                          isFaolSelected
-                                              ? _buildActiveCouponContent(
-                                                coupon,
-                                              )
-                                              : _buildArchivedCouponContent(
-                                                coupon,
-                                              ),
+                                        child: Container(
+                                          height: cardHeight,
+                                          padding: const EdgeInsets.all(16),
+                                          child:
+                                              isFaolSelected
+                                                  ? _buildActiveCouponContent(
+                                                    coupon,
+                                                  )
+                                                  : _buildArchivedCouponContent(
+                                                    coupon,
+                                                  ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -431,26 +581,68 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Image.asset(
-                  coupon['logo'],
-                  fit: BoxFit.contain,
-                  errorBuilder:
-                      (context, error, stackTrace) =>
-                          const Icon(Icons.card_giftcard),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: CircleAvatar(
+                    radius: 18,
+                    backgroundColor: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Image.asset(
+                        coupon['logo'],
+                        fit: BoxFit.contain,
+                        errorBuilder:
+                            (context, error, stackTrace) => const Icon(
+                              Icons.card_giftcard,
+                              color: primaryColor,
+                            ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                const SizedBox(width: 12),
+                Text(
+                  coupon['name'],
+                  style: GoogleFonts.poppins(
+                    color: textPrimaryColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
-            Text(
-              coupon['name'],
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.star, color: Colors.amber, size: 16),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Premium',
+                    style: GoogleFonts.poppins(
+                      color: primaryColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -459,25 +651,68 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              '7/10',
-              style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                '7/10 stamps',
+                style: GoogleFonts.poppins(
+                  color: Colors.blue.shade700,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
-            Text(
-              '${coupon['amount'].toInt()} UZS',
-              style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.green.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                '${coupon['amount'].toInt()} UZS',
+                style: GoogleFonts.poppins(
+                  color: Colors.green.shade700,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ],
         ),
-        const SizedBox(height: 8),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: LinearProgressIndicator(
-            value: 0.7,
-            backgroundColor: Colors.grey.shade200,
-            valueColor: const AlwaysStoppedAnimation<Color>(Colors.black),
-            minHeight: 8,
-          ),
+        const SizedBox(height: 12),
+        Stack(
+          children: [
+            Container(
+              height: 10,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            Container(
+              height: 10,
+              width: MediaQuery.of(context).size.width * 0.7 * 0.7,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [primaryColor, secondaryColor],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: primaryColor.withOpacity(0.3),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -492,55 +727,143 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Image.asset(
-                      coupon['logo'],
-                      fit: BoxFit.contain,
-                      errorBuilder:
-                          (context, error, stackTrace) =>
-                              const Icon(Icons.card_giftcard),
+                Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: CircleAvatar(
+                    radius: 18,
+                    backgroundColor: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Image.asset(
+                        coupon['logo'],
+                        fit: BoxFit.contain,
+                        errorBuilder:
+                            (context, error, stackTrace) => const Icon(
+                              Icons.card_giftcard,
+                              color: primaryColor,
+                            ),
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 12),
                 Text(
                   coupon['name'],
                   style: GoogleFonts.poppins(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
+                    color: textPrimaryColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
             ),
-            Text(
-              '${coupon['amount'].toInt()} UZS',
-              style: GoogleFonts.poppins(
-                color: Colors.white,
-                decoration: TextDecoration.lineThrough,
-                decorationThickness: 3,
-                decorationColor: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.red.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                '${coupon['amount'].toInt()} UZS',
+                style: GoogleFonts.poppins(
+                  color: Colors.red,
+                  decoration: TextDecoration.lineThrough,
+                  decorationThickness: 2,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ],
         ),
         const Spacer(),
-        Text(
-          'Tugash muddati: ${coupon['expiry']}',
-          style: GoogleFonts.poppins(
-            color: Colors.red,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.red.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.access_time, color: Colors.red, size: 16),
+              const SizedBox(width: 6),
+              Text(
+                'Expired: ${coupon['expiry']}',
+                style: GoogleFonts.poppins(
+                  color: Colors.red,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
       ],
+    );
+  }
+
+  Widget _buildLanguageOption(String flag, String language, String code) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: () {
+            Navigator.pop(context, code);
+            // Set language here
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(flag, style: const TextStyle(fontSize: 20)),
+                ),
+                const SizedBox(width: 16),
+                Text(
+                  language,
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: textPrimaryColor,
+                  ),
+                ),
+                const Spacer(),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Colors.grey.shade400,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
