@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:babay_mobile/utils/logger.dart';
 import 'package:http/http.dart' as http;
 import 'package:babay_mobile/core/service_locator.dart';
-import 'package:babay_mobile/data/models/user_profile.dart';
 import 'package:babay_mobile/data/services/auth_service.dart';
+import 'package:babay_mobile/data/models/user_profile_model.dart';
 
 class ProfileService {
   static const String baseUrl = 'http://babay.pro/app/profile.php';

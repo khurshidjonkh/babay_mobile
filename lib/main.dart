@@ -1,5 +1,6 @@
 import 'package:babay_mobile/core/providers/profile_provider.dart';
 import 'package:babay_mobile/presentation/screens/auth/splash_screen.dart';
+import 'package:babay_mobile/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'core/service_locator.dart';
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
           useMaterial3: true,
         ),
-        home: const SplashScreen(),
+        home: const HomeScreen(),
       ),
     );
   }
