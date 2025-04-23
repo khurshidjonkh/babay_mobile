@@ -7,6 +7,11 @@ import '../widgets/coupon_details_sheet.dart';
 import 'notifications_screen.dart';
 import 'profile/profile_screen.dart';
 
+// Constants for card dimensions and visibility
+const cardHeight = 160.0;
+const topVisiblePartOfEachCard =
+    cardHeight * 0.5; // How much of each card is visible initially
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -16,6 +21,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool isFaolSelected = true;
+  final _dragValue = ValueNotifier<double>(0);
 
   final List<Map<String, dynamic>> coupons = [
     {
@@ -34,25 +40,43 @@ class _HomeScreenState extends State<HomeScreen> {
       'name': 'Qanotchi',
       'logo': 'assets/images/qanotchi.jpg',
       'amount': 50000.0,
-      'color': Colors.red,
-    },
-    {
-      'name': 'Safia',
-      'logo': 'assets/images/safia.jpg',
-      'amount': 50000.0,
-      'color': const Color(0xFFE8E5FF),
+      'color': const Color.fromARGB(255, 55, 221, 69),
     },
     {
       'name': 'Korzinka',
       'logo': 'assets/images/korzinka.png',
       'amount': 50000.0,
-      'color': const Color(0xFF9C27B0),
+      'color': const Color.fromARGB(255, 231, 162, 201),
     },
     {
       'name': 'Qanotchi',
       'logo': 'assets/images/qanotchi.jpg',
       'amount': 50000.0,
-      'color': Colors.red,
+      'color': const Color.fromARGB(255, 168, 157, 163),
+    },
+    {
+      'name': 'Korzinka',
+      'logo': 'assets/images/korzinka.png',
+      'amount': 50000.0,
+      'color': const Color.fromARGB(255, 183, 189, 131),
+    },
+    {
+      'name': 'Qanotchi',
+      'logo': 'assets/images/qanotchi.jpg',
+      'amount': 50000.0,
+      'color': const Color.fromARGB(255, 55, 153, 138),
+    },
+    {
+      'name': 'Korzinka',
+      'logo': 'assets/images/korzinka.png',
+      'amount': 50000.0,
+      'color': const Color.fromARGB(255, 181, 134, 141),
+    },
+    {
+      'name': 'Qanotchi',
+      'logo': 'assets/images/qanotchi.jpg',
+      'amount': 50000.0,
+      'color': const Color.fromARGB(255, 199, 210, 163),
     },
   ];
 
@@ -85,21 +109,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
       'amount': 50000.0,
       'expiry': '24.03.2025',
-      'color': const Color(0xFFE8E5FF),
+      'color': const Color.fromARGB(255, 92, 90, 103),
     },
     {
       'name': 'Korzinka',
       'logo': 'assets/images/korzinka.png',
       'amount': 50000.0,
       'expiry': '24.03.2025',
-      'color': const Color(0xFF9C27B0),
+      'color': const Color.fromARGB(255, 55, 153, 138),
     },
     {
       'name': 'Qanotchi',
       'logo': 'assets/images/qanotchi.jpg',
       'amount': 50000.0,
       'expiry': '24.03.2025',
-      'color': const Color.fromARGB(255, 199, 210, 163),
+      'color': const Color.fromARGB(255, 181, 134, 141),
     },
   ];
 
@@ -291,201 +315,232 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           const SizedBox(height: 16),
           Expanded(
-            child:
-                isFaolSelected
-                    ? ListView.builder(
-                      padding: EdgeInsets.only(
-                        top: 24,
-                        bottom: 32,
-                        left: 16,
-                        right: 16,
-                      ),
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: coupons.length,
-                      itemBuilder: (context, index) {
-                        final coupon = coupons[index];
-                        return Transform.translate(
-                          offset: Offset(0, -index * 90.0),
-                          child: InkWell(
-                            onTap: () {
-                              showCupertinoModalBottomSheet(
-                                context: context,
-                                builder:
-                                    (context) =>
-                                        CouponDetailsSheet(coupon: coupon),
-                              );
-                            },
-                            child: Container(
-                              height: 160,
-                              margin: const EdgeInsets.only(bottom: 64),
-                              child: Material(
-                                elevation: 4,
-                                color: coupon['color'],
-                                borderRadius: BorderRadius.circular(16),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 20,
-                                            backgroundColor: Colors.white,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(
-                                                4.0,
-                                              ),
-                                              child: Image.asset(
-                                                coupon['logo'],
-                                                fit: BoxFit.contain,
-                                              ),
+            child: ValueListenableBuilder<double>(
+              valueListenable: _dragValue,
+              builder: (context, value, _) {
+                final currentList = isFaolSelected ? coupons : archivedCoupons;
+                final scrollHeight =
+                    topVisiblePartOfEachCard * (currentList.length - 1) +
+                    cardHeight;
+
+                return NotificationListener(
+                  onNotification: (notification) {
+                    if (notification is ScrollUpdateNotification) {
+                      final offset = notification.metrics.pixels;
+                      if (offset < 0 &&
+                          offset > -1 * topVisiblePartOfEachCard) {
+                        _dragValue.value = offset.abs();
+                      }
+                    }
+                    return false;
+                  },
+                  child: CustomScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            currentList.isNotEmpty
+                                ? SizedBox(
+                                  height:
+                                      scrollHeight +
+                                      (currentList.length - 1) * value +
+                                      24, // Extra space at bottom
+                                )
+                                : SizedBox(height: cardHeight + 24),
+                            ...currentList.asMap().entries.map((entry) {
+                              final index = entry.key;
+                              final coupon = entry.value;
+                              return AnimatedPositioned(
+                                curve: Curves.decelerate,
+                                duration: const Duration(milliseconds: 150),
+                                top: index * (topVisiblePartOfEachCard + value),
+                                left: 16,
+                                right: 16,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    // Show coupon details
+                                    if (isFaolSelected) {
+                                      showCupertinoModalBottomSheet(
+                                        context: context,
+                                        builder:
+                                            (context) => CouponDetailsSheet(
+                                              coupon: coupon,
                                             ),
-                                          ),
-                                          Text(
-                                            coupon['name'],
-                                            style: GoogleFonts.poppins(
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
+                                      );
+                                    }
+                                  },
+                                  onLongPress: () {
+                                    if (isFaolSelected) {
+                                      showCupertinoModalBottomSheet(
+                                        context: context,
+                                        builder:
+                                            (context) => CouponDetailsSheet(
+                                              coupon: coupon,
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      const Spacer(),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            '7/10',
-                                            style: GoogleFonts.poppins(
-                                              color: Colors.black,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                          Text(
-                                            '${coupon['amount'].toInt()} UZS',
-                                            style: GoogleFonts.poppins(
-                                              color: Colors.black,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 8),
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(8),
-                                        child: LinearProgressIndicator(
-                                          value: 0.7,
-                                          backgroundColor: Colors.grey.shade200,
-                                          valueColor:
-                                              const AlwaysStoppedAnimation<
-                                                Color
-                                              >(Colors.black),
-                                          minHeight: 8,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                    : ListView.builder(
-                      padding: const EdgeInsets.only(
-                        top: 24,
-                        bottom: 32,
-                        left: 16,
-                        right: 16,
-                      ),
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: archivedCoupons.length,
-                      itemBuilder: (context, index) {
-                        final coupon = archivedCoupons[index];
-                        return Transform.translate(
-                          offset: Offset(0, -index * 90.0),
-                          child: Container(
-                            height: 160,
-                            margin: const EdgeInsets.only(bottom: 64),
-                            child: Material(
-                              elevation: 4,
-                              color: coupon['color'],
-                              borderRadius: BorderRadius.circular(16),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 20,
-                                              backgroundColor: Colors.white,
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(
-                                                  4.0,
-                                                ),
-                                                child: Image.asset(
-                                                  coupon['logo'],
-                                                  fit: BoxFit.contain,
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Text(
-                                              coupon['name'],
-                                              style: GoogleFonts.poppins(
-                                                color: Colors.black,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                          '${coupon['amount'].toInt()} UZS',
-                                          style: GoogleFonts.poppins(
-                                            color: Colors.black,
-                                            decoration:
-                                                TextDecoration.lineThrough,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                                      );
+                                    }
+                                  },
+                                  child: Container(
+                                    height: cardHeight,
+                                    decoration: BoxDecoration(
+                                      color: coupon['color'],
+                                      borderRadius: BorderRadius.circular(16),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 4),
                                         ),
                                       ],
                                     ),
-                                    const Spacer(),
-                                    Text(
-                                      'Tugash muddati: ${coupon['expiry']}',
-                                      style: GoogleFonts.poppins(
-                                        color: Colors.red,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16),
+                                      child:
+                                          isFaolSelected
+                                              ? _buildActiveCouponContent(
+                                                coupon,
+                                              )
+                                              : _buildArchivedCouponContent(
+                                                coupon,
+                                              ),
                                     ),
-                                    const SizedBox(height: 16),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                              );
+                            }),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildActiveCouponContent(Map<String, dynamic> coupon) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Image.asset(
+                  coupon['logo'],
+                  fit: BoxFit.contain,
+                  errorBuilder:
+                      (context, error, stackTrace) =>
+                          const Icon(Icons.card_giftcard),
+                ),
+              ),
+            ),
+            Text(
+              coupon['name'],
+              style: GoogleFonts.poppins(
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+        const Spacer(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '7/10',
+              style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
+            ),
+            Text(
+              '${coupon['amount'].toInt()} UZS',
+              style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: LinearProgressIndicator(
+            value: 0.7,
+            backgroundColor: Colors.grey.shade200,
+            valueColor: const AlwaysStoppedAnimation<Color>(Colors.black),
+            minHeight: 8,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildArchivedCouponContent(Map<String, dynamic> coupon) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Image.asset(
+                      coupon['logo'],
+                      fit: BoxFit.contain,
+                      errorBuilder:
+                          (context, error, stackTrace) =>
+                              const Icon(Icons.card_giftcard),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  coupon['name'],
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            Text(
+              '${coupon['amount'].toInt()} UZS',
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                decoration: TextDecoration.lineThrough,
+                decorationThickness: 3,
+                decorationColor: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+        const Spacer(),
+        Text(
+          'Tugash muddati: ${coupon['expiry']}',
+          style: GoogleFonts.poppins(
+            color: Colors.red,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 16),
+      ],
     );
   }
 }
