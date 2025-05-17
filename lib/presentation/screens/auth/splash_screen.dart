@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:babay_mobile/core/providers/auth_provider.dart';
-import 'package:babay_mobile/presentation/screens/home_screen.dart';
+import 'package:babay_mobile/presentation/screens/main_navigation.dart';
 import 'package:babay_mobile/presentation/screens/auth/phone_input_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen>
           builder:
               (_) =>
                   isAuthenticated
-                      ? const HomeScreen()
+                      ? const MainNavigation()
                       : const PhoneInputScreen(),
         ),
       );

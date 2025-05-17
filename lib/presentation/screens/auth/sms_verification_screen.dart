@@ -196,7 +196,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
     return Pinput(
       controller: _pinController,
       focusNode: _pinFocusNode,
-      length: 4,
+      length: 6,
       defaultPinTheme: defaultPinTheme,
       focusedPinTheme: focusedPinTheme,
       submittedPinTheme: submittedPinTheme,
