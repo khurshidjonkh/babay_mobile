@@ -36,211 +36,176 @@ class CouponDetailsSheet extends StatelessWidget {
                       height: 4,
                       margin: const EdgeInsets.only(bottom: 20),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
+                        color: Colors.white.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
-                // Coupon header with improved styling
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: coupon['color'].withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: CircleAvatar(
-                          radius: 22,
-                          backgroundColor: Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Image.asset(
-                              coupon['logo'], 
-                              fit: BoxFit.contain,
-                              errorBuilder: (context, error, stackTrace) => 
-                                const Icon(Icons.card_giftcard, color: primaryColor),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                    // Coupon header with profile image and name
+                    Column(
+                      children: [
+                        Row(
                           children: [
-                            Text(
-                              coupon['name'],
-                              style: GoogleFonts.poppins(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: primaryColor,
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: primaryColor.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                '${coupon['amount'].toInt()} UZS',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: primaryColor,
+                            CircleAvatar(
+                              radius: 22,
+                              backgroundColor: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Image.asset(
+                                  coupon['logo'],
+                                  fit: BoxFit.contain,
+                                  errorBuilder:
+                                      (context, error, stackTrace) =>
+                                          const Icon(
+                                            Icons.elderly,
+                                            color: primaryColor,
+                                          ),
                                 ),
                               ),
                             ),
+                            const SizedBox(width: 12),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  coupon['name'],
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                Text(
+                                  'Tugash muddati: ${coupon['expiry']}',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                // Expiration date with icon
-                Row(
-                  children: [
-                    Icon(
-                      Icons.calendar_today_outlined,
-                      size: 16,
-                      color: primaryColor,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Tugash muddati: 24.04.2025',
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey[700],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                // Description with improved styling
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vulputate tellus ut magna vehicula lobortis.',
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      color: Colors.grey[800],
-                      height: 1.5,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                // QR code with improved styling
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: accentColor, width: 1),
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Scan to redeem',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: primaryColor,
+                        const SizedBox(height: 24),
+                        // Progress indicator
+                        Row(
+                          children: [
+                            Text(
+                              '3/4',
+                              style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.green,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    height: 4,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey.shade300,
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                  ),
+                                  FractionallySizedBox(
+                                    widthFactor: 0.75, // 3/4
+                                    child: Container(
+                                      height: 4,
+                                      decoration: BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: BorderRadius.circular(2),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '0',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Jami',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 16),
+                    // Item list
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      const SizedBox(height: 12),
-                      QrImageView(
+                      child: Column(
+                        children: [
+                          _buildItemRow('Baklava set', '40,000 UZS'),
+                          const SizedBox(height: 12),
+                          _buildItemRow('Iskander Kebab', '70,000 UZS'),
+                          const SizedBox(height: 12),
+                          _buildItemRow('Birde', '40,000 UZS'),
+                          const SizedBox(height: 12),
+                          _buildItemRow('Cashback', '1%', isGreen: true),
+                          const SizedBox(height: 12),
+                          _buildItemRow('Sodiqlik', '+1', isGreen: true),
+                        ],
+                      ),
+                    ),
+                    // const SizedBox(height: 16),
+                    // QR code
+                    Container(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: QrImageView(
                         data: '123456789',
                         version: QrVersions.auto,
                         size: 180.0,
+                        backgroundColor: Colors.white,
                         eyeStyle: const QrEyeStyle(
                           eyeShape: QrEyeShape.square,
-                          color: primaryColor,
+                          color: Colors.black,
                         ),
                         dataModuleStyle: const QrDataModuleStyle(
                           dataModuleShape: QrDataModuleShape.square,
-                          color: primaryColor,
+                          color: Colors.black,
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.info_outline,
-                            size: 14,
-                            color: Colors.grey,
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            '123456789',
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey[700],
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          InkWell(
-                            onTap: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Code copied to clipboard')),
-                              );
-                            },
-                            child: const Icon(
-                              Icons.copy,
-                              size: 14,
-                              color: primaryColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-                // Action button
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryColor,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
                     ),
-                    minimumSize: const Size(double.infinity, 48),
-                  ),
-                  child: Text(
-                    'Use Coupon',
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ],
+                  ],
                 ),
               ),
             ),
@@ -253,21 +218,42 @@ class CouponDetailsSheet extends StatelessWidget {
                 borderRadius: BorderRadius.circular(30),
                 child: Container(
                   padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    Icons.close,
-                    color: Colors.grey,
-                    size: 18,
-                  ),
+                  child: const Icon(Icons.close, color: Colors.black, size: 18),
                 ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  // Helper method to build item rows
+  Widget _buildItemRow(String label, String value, {bool isGreen = false}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.poppins(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+        Text(
+          value,
+          style: GoogleFonts.poppins(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: isGreen ? Colors.green : Colors.black87,
+          ),
+        ),
+      ],
     );
   }
 }
