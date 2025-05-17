@@ -1,3 +1,4 @@
+import 'package:babay_mobile/presentation/screens/card_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -33,7 +34,7 @@ class _MainNavigationState extends State<MainNavigation> {
   // List of screens for the bottom navigation
   final List<Widget> _screens = [
     const HomeScreen(),
-    const QRScannerScreen(), // Using this as "Carts" screen for now
+    const CardScreen(), // Using this as "Carts" screen for now
     const SearchScreen(),
     const NotificationsScreen(),
     const ProfileScreen(),
@@ -62,16 +63,11 @@ class _MainNavigationState extends State<MainNavigation> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildNavItem(0, Icons.home_outlined, Icons.home, 'Home'),
-            _buildNavItem(1, Icons.article_outlined, Icons.article, 'Carts'),
-            _buildNavItem(2, Icons.search_outlined, Icons.search, 'Search'),
-            _buildNavItem(
-              3,
-              Icons.notifications_outlined,
-              Icons.notifications,
-              'Notification',
-            ),
-            _buildNavItem(4, Icons.person_outline, Icons.person, 'Profile'),
+            _buildNavItem(0, Icons.home_outlined, Icons.home),
+            _buildNavItem(1, Icons.article_outlined, Icons.article),
+            _buildNavItem(2, Icons.search_outlined, Icons.search),
+            _buildNavItem(3, Icons.notifications_outlined, Icons.notifications),
+            _buildNavItem(4, Icons.person_outline, Icons.person),
           ],
         ),
       ),
@@ -82,7 +78,6 @@ class _MainNavigationState extends State<MainNavigation> {
     int index,
     IconData unselectedIcon,
     IconData selectedIcon,
-    String label,
   ) {
     final isSelected = _currentIndex == index;
 
@@ -97,24 +92,10 @@ class _MainNavigationState extends State<MainNavigation> {
                   borderRadius: BorderRadius.circular(20),
                 )
                 : null,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              isSelected ? selectedIcon : unselectedIcon,
-              color: isSelected ? Colors.white : Colors.grey,
-              size: 24,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: GoogleFonts.poppins(
-                color: isSelected ? Colors.white : Colors.grey,
-                fontSize: 12,
-                fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
-              ),
-            ),
-          ],
+        child: Icon(
+          isSelected ? selectedIcon : unselectedIcon,
+          color: isSelected ? Colors.white : Colors.grey,
+          size: 24,
         ),
       ),
     );
