@@ -1,10 +1,8 @@
 import 'package:babay_mobile/presentation/screens/card_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'home_screen.dart';
-import 'qr_scanner_screen.dart';
-import 'offers/search_screen.dart';
+import 'search/search_screen.dart';
 import 'notifications_screen.dart';
 import 'profile/profile_screen.dart';
 
