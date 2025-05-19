@@ -1,9 +1,10 @@
+import 'dart:io';
 import 'package:babay_mobile/utils/logger.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  static const String baseUrl = 'http://babay.pro';
+  static const String baseUrl = 'https://babay.pro'; // Changed to HTTPS
   static const String authEndpoint = '/app/auth.php';
   static const String tokenKey = 'jwt_token';
 
@@ -16,8 +17,20 @@ class AuthService {
           baseUrl: baseUrl,
           contentType: 'multipart/form-data',
           responseType: ResponseType.json,
+          connectTimeout: const Duration(seconds: 30),
+          receiveTimeout: const Duration(seconds: 30),
+          followRedirects: true, // Follow redirects automatically
+          validateStatus: (status) {
+            return status != null &&
+                status < 500; // Accept all status codes below 500
+          },
         ),
-      );
+      ) {
+    // Add interceptors for better error handling
+    _dio.interceptors.add(
+      LogInterceptor(responseBody: true, requestBody: true, error: true),
+    );
+  }
 
   // Get saved JWT token
   String? get token {
@@ -43,16 +56,44 @@ class AuthService {
 
       final formData = FormData.fromMap({'phone': phone});
 
-      final response = await _dio.post(authEndpoint, data: formData);
+      // Add retry mechanism for network stability
+      int retries = 3;
+      while (retries > 0) {
+        try {
+          final response = await _dio.post(
+            authEndpoint,
+            data: formData,
+            options: Options(followRedirects: true),
+          );
 
-      logger.d('Response: ${response.data}');
+          logger.d('Response: ${response.data}');
 
-      if (response.data['status'] == 'OK') {
-        return true;
-      } else {
-        logger.e('Error: ${response.data['message']}');
-        return false;
+          if (response.data['status'] == 'OK') {
+            return true;
+          } else {
+            logger.e('Error response: ${response.data}');
+            return false;
+          }
+        } on SocketException catch (e) {
+          logger.e('Socket exception: $e');
+          retries--;
+          if (retries <= 0) return false;
+          await Future.delayed(const Duration(seconds: 2)); // Wait before retry
+        } on DioException catch (e) {
+          logger.e('Dio exception: ${e.type} - ${e.message}');
+          if (e.type == DioExceptionType.connectionTimeout ||
+              e.type == DioExceptionType.connectionError) {
+            retries--;
+            if (retries <= 0) return false;
+            await Future.delayed(
+              const Duration(seconds: 2),
+            ); // Wait before retry
+          } else {
+            return false;
+          }
+        }
       }
+      return false;
     } catch (e) {
       logger.e('Error sending phone number: $e');
       return false;
@@ -66,17 +107,22 @@ class AuthService {
 
       final formData = FormData.fromMap({'phone': phone, 'sms_code': code});
 
-      final response = await _dio.post(authEndpoint, data: formData);
+      final response = await _dio.post(
+        authEndpoint,
+        data: formData,
+        options: Options(followRedirects: true),
+      );
 
       logger.d('Response: ${response.data}');
 
       if (response.data['status'] == 'OK' &&
+          response.data['data'] != null &&
           response.data['data']['token'] != null) {
         final rawToken = response.data['data']['token'] as String;
         await _saveToken(rawToken);
         return rawToken;
       } else {
-        logger.e('Error: ${response.data['message']}');
+        logger.e('Error: ${response.data['message'] ?? 'Unknown error'}');
         return null;
       }
     } catch (e) {

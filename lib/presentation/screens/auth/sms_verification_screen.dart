@@ -1,5 +1,6 @@
 import 'package:babay_mobile/core/providers/auth_provider.dart';
 import 'package:babay_mobile/presentation/screens/home_screen.dart';
+import 'package:babay_mobile/presentation/screens/main_navigation.dart';
 import 'package:babay_mobile/presentation/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,7 +26,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
   }
 
   Future<void> _handleVerification() async {
-    if (_pinController.text.length != 4) return;
+    if (_pinController.text.length != 6) return;
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final success = await authProvider.verifyCode(_pinController.text);
@@ -35,7 +36,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
     if (success) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(builder: (context) => const MainNavigation()),
       );
     } else if (authProvider.error != null) {
       _showErrorSnackBar(authProvider.error!);
