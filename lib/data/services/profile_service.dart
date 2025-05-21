@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:babay_mobile/utils/logger.dart';
 import 'package:http/http.dart' as http;
 import 'package:babay_mobile/core/service_locator.dart';
 import 'package:babay_mobile/data/services/auth_service.dart';
@@ -21,6 +22,7 @@ class ProfileService {
       final response = await http.get(Uri.parse(baseUrl), headers: headers);
 
       final data = json.decode(response.body);
+      logger.d('Profile response: $data');
       if (response.statusCode == 200) {
         if (data['status'] == 'OK' && data['data'] != null) {
           return UserProfile.fromJson(data['data']);
