@@ -1,3 +1,6 @@
+import 'package:babay_mobile/core/service_locator.dart';
+import 'package:babay_mobile/data/services/profile_service.dart';
+import 'package:babay_mobile/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
