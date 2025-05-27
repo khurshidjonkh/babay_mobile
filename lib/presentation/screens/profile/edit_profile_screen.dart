@@ -2,12 +2,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import '../../../core/providers/profile_provider.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final String initialName;
   final String initialPhone;
   final String initialEmail;
   final DateTime initialBirthDate;
+  final String initialGender;
 
   const EditProfileScreen({
     super.key,
@@ -15,6 +19,7 @@ class EditProfileScreen extends StatefulWidget {
     required this.initialPhone,
     required this.initialEmail,
     required this.initialBirthDate,
+    required this.initialGender,
   });
 
   @override
@@ -25,35 +30,50 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController nameController;
   late TextEditingController phoneController;
   late TextEditingController emailController;
+  late TextEditingController lastNameController;
   late DateTime birthDate;
+  late String gender;
   File? _pickedImage;
   bool _hasChanged = false;
+  bool _isSubmitting = false;
 
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController(text: widget.initialName);
+    // Split the full name into first name and last name
+    final nameParts = widget.initialName.split(' ');
+    final firstName = nameParts.isNotEmpty ? nameParts[0] : '';
+    final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+    
+    nameController = TextEditingController(text: firstName);
+    lastNameController = TextEditingController(text: lastName);
     phoneController = TextEditingController(text: widget.initialPhone);
     emailController = TextEditingController(text: widget.initialEmail);
     birthDate = widget.initialBirthDate;
+    gender = widget.initialGender.isEmpty ? 'M' : widget.initialGender;
+    
     nameController.addListener(_onChanged);
+    lastNameController.addListener(_onChanged);
     phoneController.addListener(_onChanged);
     emailController.addListener(_onChanged);
   }
 
   void _onChanged() {
+    final fullName = '${nameController.text} ${lastNameController.text}'.trim();
     setState(() {
       _hasChanged =
-          nameController.text != widget.initialName ||
+          fullName != widget.initialName ||
           phoneController.text != widget.initialPhone ||
           emailController.text != widget.initialEmail ||
-          birthDate != widget.initialBirthDate;
+          birthDate != widget.initialBirthDate ||
+          gender != widget.initialGender;
     });
   }
 
   @override
   void dispose() {
     nameController.dispose();
+    lastNameController.dispose();
     phoneController.dispose();
     emailController.dispose();
     super.dispose();
@@ -107,19 +127,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         actions: [
           TextButton(
-            onPressed:
-                _hasChanged
-                    ? () {
-                      /* Save logic here */
-                    }
-                    : null,
-            child: Text(
-              'Saqlash',
-              style: GoogleFonts.poppins(
-                color: _hasChanged ? Colors.purple : Colors.grey,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            onPressed: (_hasChanged && !_isSubmitting)
+                ? _handleSave
+                : null,
+            child: _isSubmitting
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.purple,
+                    ),
+                  )
+                : Text(
+                    'Saqlash',
+                    style: GoogleFonts.poppins(
+                      color: _hasChanged ? Colors.purple : Colors.grey,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
           ),
         ],
       ),
@@ -146,7 +172,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              _buildTextField('FIO', nameController),
+              _buildTextField('Ism', nameController),
+              const SizedBox(height: 16),
+              _buildTextField('Familiya', lastNameController),
               const SizedBox(height: 16),
               _buildTextField(
                 'Telefon',
@@ -161,6 +189,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               const SizedBox(height: 16),
               _buildBirthDateField(),
+              const SizedBox(height: 16),
+              _buildGenderSelector(),
               const SizedBox(height: 32),
               _buildActionButton(
                 text: 'Akkaundtan chiqish',
@@ -234,6 +264,131 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             suffixIcon: const Icon(Icons.calendar_today, color: Colors.purple),
           ),
         ),
+      ),
+    );
+  }
+  
+  Widget _buildGenderSelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 8, bottom: 8),
+          child: Text(
+            'Jins',
+            style: GoogleFonts.poppins(color: Colors.purple),
+          ),
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: _buildGenderOption('M', 'Erkak'),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: _buildGenderOption('F', 'Ayol'),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+  
+  Widget _buildGenderOption(String value, String label) {
+    final isSelected = gender == value;
+    
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          gender = value;
+          _hasChanged = true;
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          color: isSelected 
+              ? Colors.purple.withOpacity(0.2) 
+              : Colors.purple.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected ? Colors.purple : Colors.purple.shade100,
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (isSelected)
+              const Icon(Icons.check_circle, color: Colors.purple, size: 20),
+            if (isSelected) const SizedBox(width: 8),
+            Text(
+              label,
+              style: GoogleFonts.poppins(
+                color: Colors.black,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Future<void> _handleSave() async {
+    // Validate inputs
+    if (nameController.text.length < 3) {
+      _showErrorSnackBar('Ism kamida 3 ta belgidan iborat bo\'lishi kerak');
+      return;
+    }
+    
+    if (lastNameController.text.isEmpty) {
+      _showErrorSnackBar('Familiya kiritilishi shart');
+      return;
+    }
+    
+    if (phoneController.text.isEmpty || phoneController.text.length < 9) {
+      _showErrorSnackBar('Telefon raqami noto\'g\'ri formatda');
+      return;
+    }
+    
+    if (emailController.text.isEmpty || !emailController.text.contains('@')) {
+      _showErrorSnackBar('Email manzili noto\'g\'ri formatda');
+      return;
+    }
+    
+    setState(() => _isSubmitting = true);
+    
+    try {
+      final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+      
+      final success = await profileProvider.updateProfile(
+        context: context,
+        name: nameController.text,
+        lastName: lastNameController.text,
+        email: emailController.text,
+        phone: phoneController.text,
+        birthDate: birthDate,
+        gender: gender,
+      );
+      
+      if (success && mounted) {
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      _showErrorSnackBar('Xatolik yuz berdi: $e');
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
+    }
+  }
+  
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
       ),
     );
   }

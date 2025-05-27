@@ -32,6 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
@@ -63,6 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ? DateTime.tryParse(profile.birthdayDate!) ??
                                       DateTime(1998, 1, 1)
                                   : DateTime(1998, 1, 1),
+                          initialGender: profile.gender,
                         ),
                   ),
                 ).then((_) {
@@ -181,7 +183,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child:
                           profile.photo != null && profile.photo!.isNotEmpty
                               ? Image.network(
-                                profile.photo!,
+                                'https://babay.pro${profile.photo}',
                                 fit: BoxFit.cover,
                                 width: 100,
                                 height: 100,
