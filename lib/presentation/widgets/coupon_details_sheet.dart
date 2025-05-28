@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 // App theme colors - matching home screen
 const Color primaryColor = Color(0xFF6A1B9A);
@@ -29,167 +30,143 @@ class CouponDetailsSheet extends StatelessWidget {
                 physics: const BouncingScrollPhysics(),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Handle bar for better UX
-                    Container(
-                      width: 40,
-                      height: 4,
-                      margin: const EdgeInsets.only(bottom: 20),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(2),
+                    Center(
+                      child: Container(
+                        width: 40,
+                        height: 4,
+                        margin: const EdgeInsets.only(bottom: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
                       ),
                     ),
 
-                    // Coupon header with profile image and name
-                    Column(
+                    // Top row with logo, progress indicator and counter
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Logo and 3/4 indicator
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // Circular profile image
                             CircleAvatar(
-                              radius: 22,
+                              radius: 20,
                               backgroundColor: Colors.white,
                               child: Padding(
-                                padding: const EdgeInsets.all(4.0),
+                                padding: const EdgeInsets.all(2.0),
                                 child: Image.asset(
                                   coupon['logo'],
-                                  fit: BoxFit.contain,
+                                  fit: BoxFit.cover,
                                   errorBuilder:
                                       (context, error, stackTrace) =>
                                           const Icon(
                                             Icons.elderly,
                                             color: primaryColor,
+                                            size: 24,
                                           ),
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 12),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  coupon['name'],
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                Text(
-                                  'Tugash muddati: ${coupon['expiry']}',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.black54,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
-                        // Progress indicator
-                        Row(
-                          children: [
+                            const SizedBox(width: 8),
+                            // 3/4 text
                             Text(
                               '3/4',
                               style: GoogleFonts.poppins(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
-                                color: Colors.green,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    height: 4,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey.shade300,
-                                      borderRadius: BorderRadius.circular(2),
-                                    ),
-                                  ),
-                                  FractionallySizedBox(
-                                    widthFactor: 0.75, // 3/4
-                                    child: Container(
-                                      height: 4,
-                                      decoration: BoxDecoration(
-                                        color: Colors.green,
-                                        borderRadius: BorderRadius.circular(2),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    '0',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    'Jami',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black54,
-                                    ),
-                                  ),
-                                ],
+                                color: primaryColor,
                               ),
                             ),
                           ],
                         ),
+                        const SizedBox(width: 12),
+
+                        // Step indicator
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: StepProgressIndicator(
+                              totalSteps: 4,
+                              currentStep: 3,
+                              size: 8,
+                              padding: 6,
+                              selectedColor: Colors.black,
+                              unselectedColor: Colors.grey.withOpacity(0.3),
+                              roundedEdges: const Radius.circular(10),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(width: 12),
+
+                        // Counter
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                '0',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Jami',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
 
-                    const SizedBox(height: 16),
-                    // Item list
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        children: [
-                          _buildItemRow('Baklava set', '40,000 UZS'),
-                          const SizedBox(height: 12),
-                          _buildItemRow('Iskander Kebab', '70,000 UZS'),
-                          const SizedBox(height: 12),
-                          _buildItemRow('Birde', '40,000 UZS'),
-                          const SizedBox(height: 12),
-                          _buildItemRow('Cashback', '1%', isGreen: true),
-                          const SizedBox(height: 12),
-                          _buildItemRow('Sodiqlik', '+1', isGreen: true),
-                        ],
+                    const SizedBox(height: 20),
+
+                    // Expiration date
+                    Text(
+                      'Tugash muddati: 24.04.2025',
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black87,
                       ),
                     ),
-                    // const SizedBox(height: 16),
-                    // QR code
-                    Container(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
+
+                    const SizedBox(height: 16),
+
+                    // Description text
+                    Text(
+                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vulputate tellus ut magna vehicula lobortis.',
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black87,
                       ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // QR code centered
+                    Center(
                       child: QrImageView(
                         data: '123456789',
                         version: QrVersions.auto,

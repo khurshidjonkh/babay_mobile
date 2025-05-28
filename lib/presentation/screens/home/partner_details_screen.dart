@@ -1,6 +1,8 @@
+import 'package:babay_mobile/presentation/widgets/coupon_details_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:babay_mobile/presentation/screens/home/menu_item_details_screen.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 // App theme colors - matching the app's theme
 const Color primaryColor = Color(0xFF6A1B9A);
@@ -11,10 +13,7 @@ const Color backgroundColor = Color(0xFFF5F5F5);
 class PartnerDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> partner;
 
-  const PartnerDetailsScreen({
-    super.key,
-    required this.partner,
-  });
+  const PartnerDetailsScreen({super.key, required this.partner});
 
   @override
   State<PartnerDetailsScreen> createState() => _PartnerDetailsScreenState();
@@ -69,10 +68,7 @@ class _PartnerDetailsScreenState extends State<PartnerDetailsScreen> {
       appBar: AppBar(
         title: Text(
           widget.partner['name'],
-          style: GoogleFonts.poppins(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
+          style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
@@ -88,19 +84,19 @@ class _PartnerDetailsScreenState extends State<PartnerDetailsScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  
                   // Menu items
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.9,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.9,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                          ),
                       itemCount: _menuItems.length,
                       itemBuilder: (context, index) {
                         return GestureDetector(
@@ -110,9 +106,10 @@ class _PartnerDetailsScreenState extends State<PartnerDetailsScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => MenuItemDetailsScreen(
-                                  menuItem: _menuItems[index],
-                                ),
+                                builder:
+                                    (context) => MenuItemDetailsScreen(
+                                      menuItem: _menuItems[index],
+                                    ),
                               ),
                             );
                           },
@@ -132,25 +129,28 @@ class _PartnerDetailsScreenState extends State<PartnerDetailsScreen> {
                                   ],
                                 ),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
                                   children: [
                                     // Menu item image
                                     Expanded(
                                       child: ClipRRect(
-                                        borderRadius: const BorderRadius.vertical(
-                                          top: Radius.circular(12),
-                                        ),
+                                        borderRadius:
+                                            const BorderRadius.vertical(
+                                              top: Radius.circular(12),
+                                            ),
                                         child: Image.asset(
                                           _menuItems[index]['image'],
                                           fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) => 
-                                              const Center(
-                                                child: Icon(
-                                                  Icons.image_not_supported,
-                                                  size: 40,
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
+                                          errorBuilder:
+                                              (context, error, stackTrace) =>
+                                                  const Center(
+                                                    child: Icon(
+                                                      Icons.image_not_supported,
+                                                      size: 40,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
                                         ),
                                       ),
                                     ),
@@ -158,7 +158,8 @@ class _PartnerDetailsScreenState extends State<PartnerDetailsScreen> {
                                     Padding(
                                       padding: const EdgeInsets.all(8),
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             _menuItems[index]['name'],
@@ -169,7 +170,8 @@ class _PartnerDetailsScreenState extends State<PartnerDetailsScreen> {
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),
-                                          if (_menuItems[index]['description'].isNotEmpty)
+                                          if (_menuItems[index]['description']
+                                              .isNotEmpty)
                                             Text(
                                               _menuItems[index]['description'],
                                               style: GoogleFonts.poppins(
@@ -177,13 +179,15 @@ class _PartnerDetailsScreenState extends State<PartnerDetailsScreen> {
                                                 color: Colors.grey[600],
                                               ),
                                             ),
-                                          if (_menuItems[index]['price'].isNotEmpty)
+                                          if (_menuItems[index]['price']
+                                              .isNotEmpty)
                                             Text(
                                               _menuItems[index]['price'],
                                               style: GoogleFonts.poppins(
                                                 fontSize: 12,
                                                 color: Colors.red,
-                                                decoration: TextDecoration.lineThrough,
+                                                decoration:
+                                                    TextDecoration.lineThrough,
                                               ),
                                             ),
                                         ],
@@ -220,16 +224,14 @@ class _PartnerDetailsScreenState extends State<PartnerDetailsScreen> {
               ),
             ),
           ),
-          
+
           // QR code generation button
           Padding(
             padding: const EdgeInsets.all(16),
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  // QR code generation will be implemented later
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                   padding: const EdgeInsets.symmetric(vertical: 16),
