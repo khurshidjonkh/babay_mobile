@@ -1,8 +1,8 @@
+import 'package:babay_mobile/presentation/widgets/babay_gold_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import '../../../core/providers/profile_provider.dart';
 import '../../../data/models/user_profile_model.dart';
 import 'edit_profile_screen.dart';
@@ -26,6 +26,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ).fetchProfile(context);
     });
   }
+
+  // BaBay Gold data
+  final Map<String, dynamic> _babayGoldData = {
+    'points': '28,575',
+    'expiry': '24.04.2025',
+    'progress': 0.7,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -223,20 +230,93 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 12),
                   _buildInfoRow(Icons.email, profile.email),
                   const SizedBox(height: 32),
-                  QrImageView(
-                    data: profile.id, // User's ID for QR code
-                    version: QrVersions.auto,
-                    size: 200.0,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Cashback olish uchun QR kodni kassirga ko\'rsating',
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      color: Colors.purple,
-                      fontWeight: FontWeight.w500,
+                  // BaBay Gold Card
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+                    child: Text(
+                      'BaBay Gold',
+                      style: GoogleFonts.poppins(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                    textAlign: TextAlign.center,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: InkWell(
+                      onTap: () {
+                        showCupertinoModalBottomSheet(
+                          context: context,
+                          backgroundColor: Colors.transparent,
+                          builder:
+                              (context) =>
+                                  BaBayGoldSheet(goldData: _babayGoldData),
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(16),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [primaryColor, secondaryColor],
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'BaBay GOLD',
+                              style: GoogleFonts.poppins(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: LinearProgressIndicator(
+                                value: _babayGoldData['progress'],
+                                minHeight: 8,
+                                backgroundColor: Colors.white.withOpacity(0.3),
+                                valueColor: const AlwaysStoppedAnimation<Color>(
+                                  Colors.cyan,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              '${_babayGoldData['points']} BaBay Pointlari',
+                              style: GoogleFonts.poppins(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Tugash muddati: ${_babayGoldData['expiry']}',
+                              style: GoogleFonts.poppins(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white.withOpacity(0.8),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
