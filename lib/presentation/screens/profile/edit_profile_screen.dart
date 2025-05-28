@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import '../../../core/providers/profile_provider.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -44,14 +43,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final nameParts = widget.initialName.split(' ');
     final firstName = nameParts.isNotEmpty ? nameParts[0] : '';
     final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
-    
+
+    print('Initial name: "${widget.initialName}"');
+    print('Parsed first name: "$firstName", last name: "$lastName"');
+
     nameController = TextEditingController(text: firstName);
     lastNameController = TextEditingController(text: lastName);
     phoneController = TextEditingController(text: widget.initialPhone);
     emailController = TextEditingController(text: widget.initialEmail);
     birthDate = widget.initialBirthDate;
     gender = widget.initialGender.isEmpty ? 'M' : widget.initialGender;
-    
+
     nameController.addListener(_onChanged);
     lastNameController.addListener(_onChanged);
     phoneController.addListener(_onChanged);
@@ -127,25 +129,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: (_hasChanged && !_isSubmitting)
-                ? _handleSave
-                : null,
-            child: _isSubmitting
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.purple,
+            onPressed: (_hasChanged && !_isSubmitting) ? _handleSave : null,
+            child:
+                _isSubmitting
+                    ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.purple,
+                      ),
+                    )
+                    : Text(
+                      'Saqlash',
+                      style: GoogleFonts.poppins(
+                        color: _hasChanged ? Colors.purple : Colors.grey,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  )
-                : Text(
-                    'Saqlash',
-                    style: GoogleFonts.poppins(
-                      color: _hasChanged ? Colors.purple : Colors.grey,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
           ),
         ],
       ),
@@ -267,36 +268,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
     );
   }
-  
+
   Widget _buildGenderSelector() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 8, bottom: 8),
-          child: Text(
-            'Jins',
-            style: GoogleFonts.poppins(color: Colors.purple),
-          ),
+          child: Text('Jins', style: GoogleFonts.poppins(color: Colors.purple)),
         ),
         Row(
           children: [
-            Expanded(
-              child: _buildGenderOption('M', 'Erkak'),
-            ),
+            Expanded(child: _buildGenderOption('M', 'Erkak')),
             const SizedBox(width: 16),
-            Expanded(
-              child: _buildGenderOption('F', 'Ayol'),
-            ),
+            Expanded(child: _buildGenderOption('F', 'Ayol')),
           ],
         ),
       ],
     );
   }
-  
+
   Widget _buildGenderOption(String value, String label) {
     final isSelected = gender == value;
-    
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -307,9 +301,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected 
-              ? Colors.purple.withOpacity(0.2) 
-              : Colors.purple.withOpacity(0.05),
+          color:
+              isSelected
+                  ? Colors.purple.withOpacity(0.2)
+                  : Colors.purple.withOpacity(0.05),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected ? Colors.purple : Colors.purple.shade100,
@@ -334,44 +329,56 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
     );
   }
-  
+
   Future<void> _handleSave() async {
     // Validate inputs
     if (nameController.text.length < 3) {
       _showErrorSnackBar('Ism kamida 3 ta belgidan iborat bo\'lishi kerak');
       return;
     }
-    
+
     if (lastNameController.text.isEmpty) {
       _showErrorSnackBar('Familiya kiritilishi shart');
       return;
     }
-    
+
     if (phoneController.text.isEmpty || phoneController.text.length < 9) {
       _showErrorSnackBar('Telefon raqami noto\'g\'ri formatda');
       return;
     }
-    
+
     if (emailController.text.isEmpty || !emailController.text.contains('@')) {
       _showErrorSnackBar('Email manzili noto\'g\'ri formatda');
       return;
     }
-    
+
     setState(() => _isSubmitting = true);
-    
+
     try {
-      final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
-      
+      final profileProvider = Provider.of<ProfileProvider>(
+        context,
+        listen: false,
+      );
+
+      // Log the data being sent
+      print('Sending profile update:');
+      print('Name: ${nameController.text}');
+      print('Last Name: ${lastNameController.text}');
+      print('Email: ${emailController.text}');
+      print('Phone: ${phoneController.text}');
+      print('Birth Date: $birthDate');
+      print('Gender: $gender');
+
       final success = await profileProvider.updateProfile(
         context: context,
-        name: nameController.text,
-        lastName: lastNameController.text,
-        email: emailController.text,
-        phone: phoneController.text,
+        name: nameController.text.trim(),
+        lastName: lastNameController.text.trim(),
+        email: emailController.text.trim(),
+        phone: phoneController.text.trim(),
         birthDate: birthDate,
         gender: gender,
       );
-      
+
       if (success && mounted) {
         Navigator.pop(context);
       }
@@ -383,13 +390,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       }
     }
   }
-  
+
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
   }
 
