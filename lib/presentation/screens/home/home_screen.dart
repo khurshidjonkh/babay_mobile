@@ -1,4 +1,5 @@
-import 'package:babay_mobile/presentation/screens/qr_scanner_screen.dart';
+import 'package:babay_mobile/presentation/screens/home/qr_scanner_screen.dart';
+import 'package:babay_mobile/presentation/screens/home/partners_screen.dart';
 import 'package:babay_mobile/presentation/widgets/coupon_details_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -140,70 +141,75 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Coupon Cards with Snap Scrolling
-              SizedBox(
-                height: 200,
-                child: PageView.builder(
-                  controller: _couponPageController,
-                  itemCount: _loyaltyCards.length,
-                  onPageChanged: (index) {
-                    setState(() {
-                      _currentCouponPage = index;
-                    });
-                  },
-                  physics: const PageScrollPhysics(),
-                  padEnds: true,
-                  itemBuilder: (context, index) {
-                    return AnimatedScale(
-                      scale: _currentCouponPage == index ? 1.0 : 0.9,
-                      duration: const Duration(milliseconds: 300),
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 16,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
+              Column(
+                children: [
+                  SizedBox(
+                    height: 180,
+                    child: PageView.builder(
+                      controller: _couponPageController,
+                      itemCount: _loyaltyCards.length,
+                      onPageChanged: (index) {
+                        setState(() {
+                          _currentCouponPage = index;
+                        });
+                      },
+                      physics: const PageScrollPhysics(),
+                      padEnds: true,
+                      itemBuilder: (context, index) {
+                        return AnimatedScale(
+                          scale: _currentCouponPage == index ? 1.0 : 0.9,
+                          duration: const Duration(milliseconds: 300),
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 16,
                             ),
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: Stack(
-                            children: [
-                              // Card background
-                              Container(
-                                decoration: const BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [primaryColor, secondaryColor],
-                                  ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 4),
                                 ),
-                              ),
-                              // Card content
-                              Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Row(
-                                  children: [
-                                    // Logo circle
-                                    CircleAvatar(
-                                      radius: 30,
-                                      backgroundColor: Colors.white,
-                                      child: ClipOval(
-                                        child: Image.asset(
-                                          _loyaltyCards[index]['logo'],
-                                          width: 50,
-                                          height: 50,
-                                          fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (context, error, stackTrace) =>
-                                                  Text(
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: Stack(
+                                children: [
+                                  // Card background
+                                  Container(
+                                    decoration: const BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [primaryColor, secondaryColor],
+                                      ),
+                                    ),
+                                  ),
+                                  // Card content
+                                  Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: Row(
+                                      children: [
+                                        // Logo circle
+                                        CircleAvatar(
+                                          radius: 30,
+                                          backgroundColor: Colors.white,
+                                          child: ClipOval(
+                                            child: Image.asset(
+                                              _loyaltyCards[index]['logo'],
+                                              width: 50,
+                                              height: 50,
+                                              fit: BoxFit.cover,
+                                              errorBuilder:
+                                                  (
+                                                    context,
+                                                    error,
+                                                    stackTrace,
+                                                  ) => Text(
                                                     _loyaltyCards[index]['name']
                                                         .substring(0, 1),
                                                     style: const TextStyle(
@@ -213,74 +219,68 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       color: primaryColor,
                                                     ),
                                                   ),
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    // Card details
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            _loyaltyCards[index]['name'],
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 24,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Text(
-                                            _loyaltyCards[index]['description'],
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 14,
-                                              color: Colors.white.withOpacity(
-                                                0.8,
+                                        const SizedBox(width: 16),
+                                        // Card details
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                _loyaltyCards[index]['name'],
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                ),
                                               ),
-                                            ),
+                                              Text(
+                                                _loyaltyCards[index]['description'],
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 14,
+                                                  color: Colors.white
+                                                      .withOpacity(0.8),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              // Page indicators
-                              Positioned(
-                                bottom: 16,
-                                left: 0,
-                                right: 0,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(
-                                    _loyaltyCards.length,
-                                    (i) => Container(
-                                      margin: const EdgeInsets.symmetric(
-                                        horizontal: 4,
-                                      ),
-                                      width: 8,
-                                      height: 8,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color:
-                                            _currentCouponPage == i
-                                                ? Colors.white
-                                                : Colors.white.withOpacity(0.5),
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
+                        );
+                      },
+                    ),
+                  ),
+                  // Page indicators (moved outside the PageView)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      _loyaltyCards.length,
+                      (i) => Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color:
+                              _currentCouponPage == i
+                                  ? primaryColor
+                                  : Colors.grey.withValues(alpha: 0.5),
                         ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  ),
+                ],
               ),
 
               // Sodiqlik Kartalari section
@@ -464,6 +464,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   TextButton(
                     onPressed: () {
                       // Navigate to all partners page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PartnersScreen(),
+                        ),
+                      );
                     },
                     child: Text(
                       'Barchasi',

@@ -34,4 +34,18 @@ class UserProfile {
       gender: json['personal_gender']?.toString() ?? '',
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'last_name': lastName,
+      'email': email,
+      'personal_photo': photo,
+      'personal_phone': phone,
+      'personal_birthday': birthday,
+      'personal_birthday_date': birthdayDate,
+      'personal_gender': gender,
+    };
+  }
 }

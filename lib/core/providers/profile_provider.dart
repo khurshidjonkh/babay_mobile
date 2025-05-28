@@ -56,10 +56,12 @@ class ProfileProvider extends ChangeNotifier {
       // Save the values we're trying to update
       final String currentName = name.trim();
       final String currentLastName = lastName.trim();
-      
+
       // Simple logging
-      print('Sending profile update: name="$currentName", lastName="$currentLastName"');
-      
+      print(
+        'Sending profile update: name="$currentName", lastName="$currentLastName"',
+      );
+
       // Call the service to update profile
       final success = await _profileService.updateProfile(
         name: currentName,
@@ -73,11 +75,11 @@ class ProfileProvider extends ChangeNotifier {
       if (success) {
         // Give the server some time to process
         await Future.delayed(const Duration(seconds: 3));
-        
+
         // Refresh profile data
         _profile = null; // Clear cache
         await fetchProfile(context, silent: true);
-        
+
         // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -86,14 +88,15 @@ class ProfileProvider extends ChangeNotifier {
             duration: Duration(seconds: 2),
           ),
         );
-        
+
         // If the profile data doesn't show our updates yet, manually update the local model
         // This gives immediate feedback to the user even if the server is slow to reflect changes
         if (_profile != null) {
           final fetchedName = _profile!.name.trim();
           final fetchedLastName = _profile!.lastName.trim();
-          
-          if (fetchedName != currentName || fetchedLastName != currentLastName) {
+
+          if (fetchedName != currentName ||
+              fetchedLastName != currentLastName) {
             print('Server returned old data, updating local model');
             _profile = UserProfile(
               id: _profile!.id,

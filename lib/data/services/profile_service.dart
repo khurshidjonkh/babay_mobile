@@ -57,40 +57,34 @@ class ProfileService {
         throw Exception('No token available');
       }
 
-      // Start with base URL
-      String url = 'https://babay.pro/app/profile.php?';
-
-      // Build query parameters - only include fields that have values
+      // FINAL ATTEMPT: Using a completely manual approach with direct URL parameters
+      // Build the URL manually with parameters
+      String url = 'https://babay.pro/app/profile.php';
       List<String> params = [];
 
-      // Add name if provided
+      // Add parameters only if they have values
       if (name.trim().isNotEmpty) {
         params.add('name=${Uri.encodeComponent(name.trim())}');
       }
 
-      // Add last_name if provided
       if (lastName.trim().isNotEmpty) {
         params.add('last_name=${Uri.encodeComponent(lastName.trim())}');
       }
 
-      // Add email if provided
       if (email.trim().isNotEmpty) {
         params.add('email=${Uri.encodeComponent(email.trim())}');
       }
 
-      // Add phone if provided
       if (phone.trim().isNotEmpty) {
         params.add('personal_phone=${Uri.encodeComponent(phone.trim())}');
       }
 
-      // Add birthday if valid
       if (birthDate.year > 1900) {
         final formattedDate =
             '${birthDate.year}-${birthDate.month.toString().padLeft(2, '0')}-${birthDate.day.toString().padLeft(2, '0')}';
         params.add('personal_birthday=$formattedDate');
       }
 
-      // Add gender if provided
       if (gender.trim().isNotEmpty) {
         params.add('personal_gender=${Uri.encodeComponent(gender.trim())}');
       }
@@ -100,15 +94,19 @@ class ProfileService {
         throw Exception('No profile fields provided for update');
       }
 
-      // Join parameters with &
-      url += params.join('&');
-
-      logger.d('Sending POST request to URL: $url');
+      // Append parameters to URL
+      if (params.isNotEmpty) {
+        url += '?' + params.join('&');
+      }
 
       // Set header - ONLY Token as shown in your Postman
       final headers = {'Token': rawToken};
 
-      // Send POST request with the URL containing parameters
+      // Log what we're sending
+      logger.d('Sending POST request to URL: $url');
+      logger.d('Headers: $headers');
+
+      // Send POST request with NO BODY, just URL parameters
       final response = await http.post(Uri.parse(url), headers: headers);
 
       final data = json.decode(response.body);
@@ -116,6 +114,26 @@ class ProfileService {
 
       if (response.statusCode == 200 && data['status'] == 'OK') {
         logger.d('Server returned OK status');
+
+        // Try to fetch the profile immediately to see if changes were applied
+        try {
+          final profile = await fetchProfile();
+          logger.d('Immediate profile fetch after update: $profile');
+
+          // Check if the update was actually applied
+          if (profile.name.isEmpty && name.trim().isNotEmpty) {
+            logger.w('Server did not update name field despite returning OK');
+          }
+
+          if (profile.lastName.isEmpty && lastName.trim().isNotEmpty) {
+            logger.w(
+              'Server did not update last_name field despite returning OK',
+            );
+          }
+        } catch (e) {
+          logger.e('Error fetching profile after update: $e');
+        }
+
         return true;
       } else {
         throw Exception(data['message'] ?? 'Failed to update profile');
