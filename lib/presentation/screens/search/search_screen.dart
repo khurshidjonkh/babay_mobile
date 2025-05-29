@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 // App theme colors - matching the app's theme
 const Color primaryColor = Color(0xFF6A1B9A);
@@ -52,32 +53,39 @@ class _SearchScreenState extends State<SearchScreen> {
   ];
 
   // Coupons data (Kuponlar)
+
   final List<Map<String, dynamic>> _coupons = [
     {
       'name': 'Basri Babadan Baklava set',
       'image': 'assets/images/manti.png',
       'originalPrice': '100,000 UZS',
       'discountedPrice': '50,000 UZS',
+      'distance': '1.2',
+      'latitude': 41.299496, // Tashkent coordinates (placeholder)
+      'longitude': 69.240073,
     },
     {
       'name': 'Iskander Kebab',
       'image': 'assets/images/kebab.png',
       'originalPrice': '120,000 UZS',
       'discountedPrice': '70,000 UZS',
+      'distance': '0.8',
+      'latitude': 41.292489,
+      'longitude': 69.229235,
     },
     {
       'name': 'Lotus Spa Massage',
       'image': 'assets/images/plow.png',
       'originalPrice': '200,000 UZS',
       'discountedPrice': '150,000 UZS',
-    },
-    {
-      'name': 'Iskander Kebab',
-      'image': 'assets/images/sweet.png',
-      'originalPrice': '120,000 UZS',
-      'discountedPrice': '70,000 UZS',
+      'distance': '2.5',
+      'latitude': 41.311151,
+      'longitude': 69.279962,
     },
   ];
+
+  // State for map visibility
+  bool _showMap = false;
 
   // Controller for the search field
   final TextEditingController _searchController = TextEditingController();
@@ -228,16 +236,77 @@ class _SearchScreenState extends State<SearchScreen> {
 
             // Coupons section (Kuponlar)
             Padding(
-              padding: const EdgeInsets.only(left: 16, bottom: 8),
-              child: Text(
-                'Kuponlar',
-                style: GoogleFonts.poppins(
-                  // color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                ),
+              padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Kuponlar',
+                    style: GoogleFonts.poppins(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _showMap = !_showMap;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(_showMap ? Icons.list : Icons.map, size: 16),
+                        const SizedBox(width: 4),
+                        Text(
+                          _showMap ? 'Ro\'yxat' : 'Xaritada ko\'rish',
+                          style: GoogleFonts.poppins(fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
+            if (_showMap)
+              Container(
+                height: 250,
+                margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(41.299496, 69.240073), // Tashkent center
+                      zoom: 12,
+                    ),
+                    myLocationEnabled: true,
+                    myLocationButtonEnabled: true,
+                    zoomControlsEnabled: true,
+                    mapToolbarEnabled: false,
+                  ),
+                ),
+              ),
 
             // Coupon cards
             Expanded(
@@ -264,7 +333,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Coupon image
+                        // Hot deal image
                         ClipRRect(
                           borderRadius: const BorderRadius.vertical(
                             top: Radius.circular(12),
@@ -288,7 +357,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ),
                           ),
                         ),
-                        // Coupon details
+                        // Hot deal details
                         Padding(
                           padding: const EdgeInsets.all(12),
                           child: Column(
@@ -304,24 +373,51 @@ class _SearchScreenState extends State<SearchScreen> {
                               ),
                               const SizedBox(height: 4),
                               Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    _coupons[index]['originalPrice'],
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.red.shade400,
-                                      decoration: TextDecoration.lineThrough,
-                                    ),
+                                  // Price information
+                                  Row(
+                                    children: [
+                                      Text(
+                                        _coupons[index]['originalPrice'],
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.red.shade400,
+                                          decoration:
+                                              TextDecoration.lineThrough,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        _coupons[index]['discountedPrice'],
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: primaryColor,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    _coupons[index]['discountedPrice'],
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: primaryColor,
-                                    ),
+
+                                  // Distance information
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.location_on,
+                                        size: 16,
+                                        color: Colors.grey,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        '${_coupons[index]['distance']} km',
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 14,
+                                          color: Colors.grey.shade700,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
