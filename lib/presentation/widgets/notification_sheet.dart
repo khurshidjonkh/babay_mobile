@@ -9,10 +9,10 @@ const Color primaryColor = Color(0xFF6A1B9A);
 const Color secondaryColor = Color(0xFF9C27B0);
 const Color accentColor = Color(0xFFE1BEE7);
 
-class CouponDetailsSheet extends StatelessWidget {
-  final Map<String, dynamic> coupon;
+class NotificationSheet extends StatelessWidget {
+  final Map<String, dynamic> notification;
 
-  const CouponDetailsSheet({super.key, required this.coupon});
+  const NotificationSheet({super.key, required this.notification});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class CouponDetailsSheet extends StatelessWidget {
                 physics: const BouncingScrollPhysics(),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     // Handle bar for better UX
                     Center(
@@ -60,7 +60,7 @@ class CouponDetailsSheet extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(2.0),
                                 child: Image.asset(
-                                  coupon['logo'],
+                                  notification['logo'],
                                   fit: BoxFit.cover,
                                   errorBuilder:
                                       (context, error, stackTrace) =>
@@ -154,34 +154,18 @@ class CouponDetailsSheet extends StatelessWidget {
                     const SizedBox(height: 16),
 
                     // Description text
+                    _buildItemRow('Cheesecake', '40,000 UZS', isGreen: true),
+                    _buildItemRow('Cashback', '1%', isGreen: true),
+                    _buildItemRow('Sodiqlik', '+1', isGreen: true),
                     Text(
-                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vulputate tellus ut magna vehicula lobortis.',
+                      '40,000 UZS kupon aktivlashdi',
                       style: GoogleFonts.poppins(
                         fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black87,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.green,
                       ),
                     ),
-
                     const SizedBox(height: 24),
-
-                    // QR code centered
-                    Center(
-                      child: QrImageView(
-                        data: '123456789',
-                        version: QrVersions.auto,
-                        size: 180.0,
-                        backgroundColor: Colors.white,
-                        eyeStyle: const QrEyeStyle(
-                          eyeShape: QrEyeShape.square,
-                          color: Colors.black,
-                        ),
-                        dataModuleStyle: const QrDataModuleStyle(
-                          dataModuleShape: QrDataModuleShape.square,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -206,6 +190,31 @@ class CouponDetailsSheet extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  // Helper method to build item rows
+  Widget _buildItemRow(String label, String value, {bool isGreen = false}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.poppins(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+        ),
+        Text(
+          value,
+          style: GoogleFonts.poppins(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: isGreen ? Colors.green : Colors.black87,
+          ),
+        ),
+      ],
     );
   }
 }

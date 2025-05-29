@@ -1,4 +1,5 @@
 import 'package:babay_mobile/presentation/widgets/coupon_details_sheet.dart';
+import 'package:babay_mobile/presentation/widgets/notification_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -58,7 +59,9 @@ class NotificationsScreen extends StatelessWidget {
               showCupertinoModalBottomSheet(
                 context: context,
                 backgroundColor: Colors.transparent,
-                builder: (context) => CouponDetailsSheet(coupon: notification),
+                builder:
+                    (context) =>
+                        NotificationSheet(notification: notifications[index]),
               );
             },
             child: Container(
