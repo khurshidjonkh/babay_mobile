@@ -191,18 +191,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   // Card content
                                   Padding(
-                                    padding: const EdgeInsets.all(16),
+                                    padding: const EdgeInsets.all(8),
                                     child: Row(
                                       children: [
                                         // Logo circle
                                         CircleAvatar(
-                                          radius: 30,
+                                          radius: 60,
                                           backgroundColor: Colors.white,
                                           child: ClipOval(
                                             child: Image.asset(
                                               _loyaltyCards[index]['logo'],
-                                              width: 50,
-                                              height: 50,
+                                              width: 120,
+                                              height: 120,
                                               fit: BoxFit.cover,
                                               errorBuilder:
                                                   (
@@ -234,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               Text(
                                                 _loyaltyCards[index]['name'],
                                                 style: GoogleFonts.poppins(
-                                                  fontSize: 24,
+                                                  fontSize: 32,
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white,
                                                 ),
