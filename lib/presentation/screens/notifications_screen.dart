@@ -1,8 +1,13 @@
-import 'package:babay_mobile/presentation/widgets/coupon_details_sheet.dart';
 import 'package:babay_mobile/presentation/widgets/notification_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+
+// App theme colors - matching the app's theme
+const Color primaryColor = Color(0xFF6A1B9A);
+const Color secondaryColor = Color(0xFF9C27B0);
+const Color accentColor = Color(0xFFE1BEE7);
+const Color backgroundColor = Color(0xFFF5F5F5);
 
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});
@@ -59,18 +64,35 @@ class NotificationsScreen extends StatelessWidget {
               showCupertinoModalBottomSheet(
                 context: context,
                 backgroundColor: Colors.transparent,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                ),
+                shadow: BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  spreadRadius: 5,
+                  offset: const Offset(0, 2),
+                ),
                 builder:
                     (context) =>
                         NotificationSheet(notification: notifications[index]),
               );
             },
+            borderRadius: BorderRadius.circular(12),
             child: Container(
               margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.orange.shade50,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+                border: Border.all(color: Colors.grey.shade200, width: 0.5),
               ),
               child: Row(
                 children: [

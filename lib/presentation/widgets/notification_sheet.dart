@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 // App theme colors - matching home screen
