@@ -146,7 +146,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
                         isLoading: auth.isLoading,
                         backgroundColor: Colors.purple,
                         onPressed:
-                            _pinController.text.length == 4
+                            _pinController.text.length == 6
                                 ? _handleVerification
                                 : null,
                       ),
