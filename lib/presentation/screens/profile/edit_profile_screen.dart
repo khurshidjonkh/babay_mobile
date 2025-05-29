@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../../core/providers/profile_provider.dart';
+import '../../../core/providers/auth_provider.dart';
+import '../../screens/auth/phone_input_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final String initialName;
@@ -82,13 +84,55 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final picked = await picker.pickImage(source: ImageSource.gallery);
-    if (picked != null) {
-      setState(() {
-        _pickedImage = File(picked.path);
-        _hasChanged = true;
-      });
+    try {
+      final picker = ImagePicker();
+      
+      // Show a dialog to choose between camera and gallery
+      final source = await showDialog<ImageSource>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Rasmni tanlang', style: GoogleFonts.poppins()),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: Text('Kamera', style: GoogleFonts.poppins()),
+                onTap: () => Navigator.pop(context, ImageSource.camera),
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: Text('Galereya', style: GoogleFonts.poppins()),
+                onTap: () => Navigator.pop(context, ImageSource.gallery),
+              ),
+            ],
+          ),
+        ),
+      );
+      
+      if (source == null) return;
+      
+      final picked = await picker.pickImage(
+        source: source,
+        imageQuality: 80, // Reduce image quality to save memory
+        maxWidth: 800,    // Limit image dimensions
+      );
+      
+      if (picked != null && mounted) {
+        setState(() {
+          _pickedImage = File(picked.path);
+          _hasChanged = true;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Rasm tanlashda xatolik: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -197,7 +241,42 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 text: 'Akkaundtan chiqish',
                 color: Colors.purple,
                 textColor: Colors.white,
-                onPressed: () {},
+                onPressed: () async {
+                  // Show confirmation dialog
+                  final confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('Akkauntdan chiqish', style: GoogleFonts.poppins()),
+                      content: Text(
+                        'Akkauntdan chiqishni xohlaysizmi?',
+                        style: GoogleFonts.poppins(),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: Text('Bekor qilish', style: GoogleFonts.poppins()),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: Text('Chiqish', style: GoogleFonts.poppins(color: Colors.red)),
+                        ),
+                      ],
+                    ),
+                  );
+                  
+                  if (confirm == true) {
+                    // Clear auth token and navigate to auth screen
+                    await Provider.of<AuthProvider>(context, listen: false).logout();
+                    
+                    if (!mounted) return;
+                    
+                    // Navigate to the initial auth page and remove all previous routes
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => const PhoneInputScreen()),
+                      (route) => false,
+                    );
+                  }
+                },
               ),
               const SizedBox(height: 12),
               _buildActionButton(
@@ -226,10 +305,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         labelText: label,
         labelStyle: GoogleFonts.poppins(color: Colors.purple),
         filled: true,
-        fillColor: Colors.purple.withOpacity(0.05),
+        fillColor: Colors.grey.shade50,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.purple.shade100),
+          borderSide: BorderSide(color: Colors.grey.shade300),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -253,10 +332,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             labelText: 'Tugilgan kun',
             labelStyle: GoogleFonts.poppins(color: Colors.purple),
             filled: true,
-            fillColor: Colors.purple.withOpacity(0.05),
+            fillColor: Colors.grey.shade50,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.purple.shade100),
+              borderSide: BorderSide(color: Colors.grey.shade300),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),

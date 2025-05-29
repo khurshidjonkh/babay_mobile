@@ -217,7 +217,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    '${profile.name} ${profile.lastName}',
+                    (profile.name.isEmpty && profile.lastName.isEmpty) 
+                        ? 'Anonymous'
+                        : '${profile.name} ${profile.lastName}',
                     style: GoogleFonts.poppins(
                       fontSize: 24,
                       fontWeight: FontWeight.w600,
