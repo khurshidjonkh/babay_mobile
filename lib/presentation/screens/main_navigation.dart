@@ -12,13 +12,6 @@ const Color secondaryColor = Color(0xFF9C27B0);
 const Color accentColor = Color(0xFFE1BEE7);
 const Color backgroundColor = Color(0xFFF5F5F5);
 
-// Gradient colors for the selected item
-const LinearGradient selectedGradient = LinearGradient(
-  colors: [Color(0xFF6A1B9A), Color(0xFF9C27B0)],
-  begin: Alignment.topLeft,
-  end: Alignment.bottomRight,
-);
-
 class MainNavigation extends StatefulWidget {
   const MainNavigation({Key? key}) : super(key: key);
 
@@ -42,60 +35,92 @@ class _MainNavigationState extends State<MainNavigation> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _screens[_currentIndex],
-      bottomNavigationBar: Container(
-        height: 70,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, -1),
-            ),
-          ],
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildNavItem(0, Icons.home_outlined, Icons.home),
-            _buildNavItem(1, Icons.article_outlined, Icons.article),
-            _buildNavItem(2, Icons.search_outlined, Icons.search),
-            _buildNavItem(3, Icons.notifications_outlined, Icons.notifications),
-            _buildNavItem(4, Icons.person_outline, Icons.person),
-          ],
+        child: Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                offset: const Offset(0, -1),
+              ),
+            ],
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+            child: BottomNavigationBar(
+              currentIndex: _currentIndex,
+              onTap: (index) => setState(() => _currentIndex = index),
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: Colors.white,
+              selectedItemColor: primaryColor,
+              unselectedItemColor: Colors.grey,
+              selectedFontSize: 12,
+              unselectedFontSize: 12,
+              elevation: 0,
+              items: [
+                _buildBottomNavigationBarItem(
+                  icon: Icons.home_outlined,
+                  activeIcon: Icons.home,
+                  label: 'Home',
+                ),
+                _buildBottomNavigationBarItem(
+                  icon: Icons.article_outlined,
+                  activeIcon: Icons.article,
+                  label: 'Cards',
+                ),
+                _buildBottomNavigationBarItem(
+                  icon: Icons.search_outlined,
+                  activeIcon: Icons.search,
+                  label: 'Search',
+                ),
+                _buildBottomNavigationBarItem(
+                  icon: Icons.notifications_outlined,
+                  activeIcon: Icons.notifications,
+                  label: 'Notifications',
+                ),
+                _buildBottomNavigationBarItem(
+                  icon: Icons.person_outline,
+                  activeIcon: Icons.person,
+                  label: 'Profile',
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildNavItem(
-    int index,
-    IconData unselectedIcon,
-    IconData selectedIcon,
-  ) {
-    final isSelected = _currentIndex == index;
-
-    return InkWell(
-      onTap: () => setState(() => _currentIndex = index),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration:
-            isSelected
-                ? BoxDecoration(
-                  gradient: selectedGradient,
-                  borderRadius: BorderRadius.circular(20),
-                )
-                : null,
-        child: Icon(
-          isSelected ? selectedIcon : unselectedIcon,
-          color: isSelected ? Colors.white : Colors.grey,
-          size: 24,
-        ),
+  BottomNavigationBarItem _buildBottomNavigationBarItem({
+    required IconData icon,
+    required IconData activeIcon,
+    required String label,
+  }) {
+    return BottomNavigationBarItem(
+      icon: Icon(icon),
+      activeIcon: ShaderMask(
+        shaderCallback: (Rect bounds) {
+          return const LinearGradient(
+            colors: [primaryColor, secondaryColor],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ).createShader(bounds);
+        },
+        child: Icon(activeIcon),
       ),
+      label: label,
     );
   }
 }
