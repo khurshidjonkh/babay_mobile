@@ -2,6 +2,7 @@ import 'package:babay_mobile/presentation/widgets/coupon_details_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:babay_mobile/presentation/screens/home/menu_item_details_screen.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 // App theme colors - matching the app's theme
@@ -22,6 +23,9 @@ class PartnerDetailsScreen extends StatefulWidget {
 class _PartnerDetailsScreenState extends State<PartnerDetailsScreen> {
   // Selected menu items
   final Set<int> _selectedItems = {};
+
+  // State for map visibility
+  bool _showMap = false;
 
   // Sample menu items for the partner
   final List<Map<String, dynamic>> _menuItems = [
@@ -66,9 +70,43 @@ class _PartnerDetailsScreenState extends State<PartnerDetailsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(
-          widget.partner['name'],
-          style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600),
+        title: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Circular company logo
+            CircleAvatar(
+              radius: 30,
+              backgroundColor: Colors.white,
+              child: ClipOval(
+                child: Image.asset(
+                  widget.partner['logo'],
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                  errorBuilder:
+                      (context, error, stackTrace) => Center(
+                        child: Text(
+                          widget.partner['name'].substring(0, 1),
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: primaryColor,
+                          ),
+                        ),
+                      ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            // Company name
+            Text(
+              widget.partner['name'],
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
@@ -77,6 +115,8 @@ class _PartnerDetailsScreenState extends State<PartnerDetailsScreen> {
           icon: const Icon(Icons.arrow_back, color: primaryColor),
           onPressed: () => Navigator.pop(context),
         ),
+        toolbarHeight:
+            120, // Increased height to accommodate the logo and title
       ),
       body: Column(
         children: [
@@ -220,6 +260,81 @@ class _PartnerDetailsScreenState extends State<PartnerDetailsScreen> {
                       },
                     ),
                   ),
+
+                  // Map section with toggle button
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                    child: Column(
+                      children: [
+                        // Map toggle button
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                _showMap = !_showMap;
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: primaryColor,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  _showMap ? Icons.list : Icons.map,
+                                  size: 16,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  _showMap ? 'Ro\'yxat' : 'Xaritada ko\'rish',
+                                  style: GoogleFonts.poppins(fontSize: 14),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        // Map view (conditionally visible)
+                        if (_showMap)
+                          Container(
+                            height: 250,
+                            margin: const EdgeInsets.only(top: 16),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: GoogleMap(
+                                initialCameraPosition: CameraPosition(
+                                  target: LatLng(
+                                    41.299496,
+                                    69.240073,
+                                  ), // Tashkent center
+                                  zoom: 14,
+                                ),
+                                myLocationEnabled: true,
+                                myLocationButtonEnabled: true,
+                                zoomControlsEnabled: true,
+                                mapToolbarEnabled: false,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -231,7 +346,20 @@ class _PartnerDetailsScreenState extends State<PartnerDetailsScreen> {
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  showCupertinoModalBottomSheet(
+                    context: context,
+                    backgroundColor: Colors.transparent,
+                    builder:
+                        (context) => CouponDetailsSheet(
+                          coupon: {
+                            'name': 'Lotus Spa',
+                            'logo': 'assets/images/safia.jpg',
+                            'description': 'Spa & Wellness',
+                          },
+                        ),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                   padding: const EdgeInsets.symmetric(vertical: 16),

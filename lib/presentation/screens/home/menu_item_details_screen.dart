@@ -1,5 +1,8 @@
+import 'package:babay_mobile/presentation/widgets/coupon_details_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 // App theme colors - matching the app's theme
 const Color primaryColor = Color(0xFF6A1B9A);
@@ -7,10 +10,18 @@ const Color secondaryColor = Color(0xFF9C27B0);
 const Color accentColor = Color(0xFFE1BEE7);
 const Color backgroundColor = Color(0xFFF5F5F5);
 
-class MenuItemDetailsScreen extends StatelessWidget {
+class MenuItemDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> menuItem;
 
   const MenuItemDetailsScreen({super.key, required this.menuItem});
+
+  @override
+  State<MenuItemDetailsScreen> createState() => _MenuItemDetailsScreenState();
+}
+
+class _MenuItemDetailsScreenState extends State<MenuItemDetailsScreen> {
+  // State for map visibility
+  bool _showMap = false;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +29,7 @@ class MenuItemDetailsScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          menuItem['name'],
+          widget.menuItem['name'],
           style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
@@ -45,7 +56,7 @@ class MenuItemDetailsScreen extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: Image.asset(
-                          menuItem['image'],
+                          widget.menuItem['image'],
                           fit: BoxFit.cover,
                           errorBuilder:
                               (context, error, stackTrace) => const Center(
@@ -68,7 +79,7 @@ class MenuItemDetailsScreen extends StatelessWidget {
                       children: [
                         // Name
                         Text(
-                          '${menuItem['name']} ${menuItem['description']}',
+                          '${widget.menuItem['name']} ${widget.menuItem['description']}',
                           style: GoogleFonts.poppins(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
@@ -77,7 +88,7 @@ class MenuItemDetailsScreen extends StatelessWidget {
                         const SizedBox(height: 8),
 
                         // Price
-                        if (menuItem['price'].isNotEmpty)
+                        if (widget.menuItem['price'].isNotEmpty)
                           Row(
                             children: [
                               Text(
@@ -88,7 +99,7 @@ class MenuItemDetailsScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                menuItem['price'],
+                                widget.menuItem['price'],
                                 style: GoogleFonts.poppins(
                                   fontSize: 16,
                                   color: Colors.red,
@@ -120,7 +131,7 @@ class MenuItemDetailsScreen extends StatelessWidget {
 
                         // Coupon info
                         Text(
-                          'BaBay kuponi bilan: ${menuItem['price']}',
+                          'BaBay kuponi bilan: ${widget.menuItem['price']}',
                           style: GoogleFonts.poppins(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -151,6 +162,77 @@ class MenuItemDetailsScreen extends StatelessWidget {
               ),
             ),
           ),
+          // Map section with toggle button
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Column(
+              children: [
+                // Map toggle button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _showMap = !_showMap;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(_showMap ? Icons.list : Icons.map, size: 16),
+                        const SizedBox(width: 4),
+                        Text(
+                          _showMap ? 'Ro\'yxat' : 'Xaritada ko\'rish',
+                          style: GoogleFonts.poppins(fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Map view (conditionally visible)
+                if (_showMap)
+                  Container(
+                    height: 250,
+                    margin: const EdgeInsets.only(top: 16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: GoogleMap(
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(
+                            41.299496,
+                            69.240073,
+                          ), // Tashkent center
+                          zoom: 14,
+                        ),
+                        myLocationEnabled: true,
+                        myLocationButtonEnabled: true,
+                        zoomControlsEnabled: true,
+                        mapToolbarEnabled: false,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
 
           // QR code generation button
           Padding(
@@ -160,6 +242,18 @@ class MenuItemDetailsScreen extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   // QR code generation will be implemented later
+                  showCupertinoModalBottomSheet(
+                    context: context,
+                    backgroundColor: Colors.transparent,
+                    builder:
+                        (context) => CouponDetailsSheet(
+                          coupon: {
+                            'name': 'Lotus Spa',
+                            'logo': 'assets/images/safia.jpg',
+                            'description': 'Spa & Wellness',
+                          },
+                        ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,

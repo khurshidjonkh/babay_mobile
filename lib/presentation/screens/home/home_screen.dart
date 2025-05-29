@@ -519,7 +519,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Icon(_showMap ? Icons.list : Icons.map, size: 16),
                           const SizedBox(width: 4),
                           Text(
-                            _showMap ? 'Ro\'yxat' : 'Xaritadan ko\'rish',
+                            _showMap ? 'Ro\'yxat' : 'Xaritada ko\'rish',
                             style: GoogleFonts.poppins(fontSize: 12),
                           ),
                         ],
