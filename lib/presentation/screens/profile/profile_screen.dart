@@ -89,60 +89,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () {
               showCupertinoModalBottomSheet(
                 context: context,
+                backgroundColor: Colors.white,
                 builder:
                     (context) => Material(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 40,
-                            height: 4,
-                            margin: const EdgeInsets.only(top: 12, bottom: 12),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade300,
-                              borderRadius: BorderRadius.circular(2),
+                      color: Colors.white,
+                      child: SafeArea(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 40,
+                              height: 4,
+                              margin: const EdgeInsets.only(
+                                top: 12,
+                                bottom: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
                             ),
-                          ),
-                          ListTile(
-                            leading: const Text(
-                              '🇺🇿',
-                              style: TextStyle(fontSize: 20),
+                            ListTile(
+                              leading: const Text(
+                                '🇺🇿',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              title: Text(
+                                'Uzbek',
+                                style: GoogleFonts.poppins(),
+                              ),
+                              onTap: () {
+                                Navigator.pop(context, 'uz');
+                                // Set language here
+                              },
                             ),
-                            title: Text('Uzbek', style: GoogleFonts.poppins()),
-                            onTap: () {
-                              Navigator.pop(context, 'uz');
-                              // Set language here
-                            },
-                          ),
-                          ListTile(
-                            leading: const Text(
-                              '🇷🇺',
-                              style: TextStyle(fontSize: 20),
+                            ListTile(
+                              leading: const Text(
+                                '🇷🇺',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              title: Text(
+                                'Russian',
+                                style: GoogleFonts.poppins(),
+                              ),
+                              onTap: () {
+                                Navigator.pop(context, 'ru');
+                                // Set language here
+                              },
                             ),
-                            title: Text(
-                              'Russian',
-                              style: GoogleFonts.poppins(),
+                            ListTile(
+                              leading: const Text(
+                                '🇬🇧',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              title: Text(
+                                'English',
+                                style: GoogleFonts.poppins(),
+                              ),
+                              onTap: () {
+                                Navigator.pop(context, 'en');
+                                // Set language here
+                              },
                             ),
-                            onTap: () {
-                              Navigator.pop(context, 'ru');
-                              // Set language here
-                            },
-                          ),
-                          ListTile(
-                            leading: const Text(
-                              '🇬🇧',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            title: Text(
-                              'English',
-                              style: GoogleFonts.poppins(),
-                            ),
-                            onTap: () {
-                              Navigator.pop(context, 'en');
-                              // Set language here
-                            },
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
               );
@@ -217,7 +227,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    (profile.name.isEmpty && profile.lastName.isEmpty) 
+                    (profile.name.isEmpty && profile.lastName.isEmpty)
                         ? 'Anonymous'
                         : '${profile.name} ${profile.lastName}',
                     style: GoogleFonts.poppins(

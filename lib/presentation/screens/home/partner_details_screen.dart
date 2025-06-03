@@ -317,19 +317,20 @@ class _PartnerDetailsScreenState extends State<PartnerDetailsScreen> {
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(12),
-                              child: GoogleMap(
-                                initialCameraPosition: CameraPosition(
-                                  target: LatLng(
-                                    41.299496,
-                                    69.240073,
-                                  ), // Tashkent center
-                                  zoom: 14,
-                                ),
-                                myLocationEnabled: true,
-                                myLocationButtonEnabled: true,
-                                zoomControlsEnabled: true,
-                                mapToolbarEnabled: false,
-                              ),
+                              child: SizedBox(),
+                              // GoogleMap(
+                              //   initialCameraPosition: CameraPosition(
+                              //     target: LatLng(
+                              //       41.299496,
+                              //       69.240073,
+                              //     ), // Tashkent center
+                              //     zoom: 14,
+                              //   ),
+                              //   myLocationEnabled: true,
+                              //   myLocationButtonEnabled: true,
+                              //   zoomControlsEnabled: true,
+                              //   mapToolbarEnabled: false,
+                              // ),
                             ),
                           ),
                       ],
@@ -378,6 +379,7 @@ class _PartnerDetailsScreenState extends State<PartnerDetailsScreen> {
               ),
             ),
           ),
+          SizedBox(height: 16),
         ],
       ),
     );

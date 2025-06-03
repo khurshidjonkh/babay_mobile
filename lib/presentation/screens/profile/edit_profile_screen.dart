@@ -86,38 +86,39 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _pickImage() async {
     try {
       final picker = ImagePicker();
-      
+
       // Show a dialog to choose between camera and gallery
       final source = await showDialog<ImageSource>(
         context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Rasmni tanlang', style: GoogleFonts.poppins()),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.photo_camera),
-                title: Text('Kamera', style: GoogleFonts.poppins()),
-                onTap: () => Navigator.pop(context, ImageSource.camera),
+        builder:
+            (context) => AlertDialog(
+              title: Text('Rasmni tanlang', style: GoogleFonts.poppins()),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.photo_camera),
+                    title: Text('Kamera', style: GoogleFonts.poppins()),
+                    onTap: () => Navigator.pop(context, ImageSource.camera),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.photo_library),
+                    title: Text('Galereya', style: GoogleFonts.poppins()),
+                    onTap: () => Navigator.pop(context, ImageSource.gallery),
+                  ),
+                ],
               ),
-              ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: Text('Galereya', style: GoogleFonts.poppins()),
-                onTap: () => Navigator.pop(context, ImageSource.gallery),
-              ),
-            ],
-          ),
-        ),
+            ),
       );
-      
+
       if (source == null) return;
-      
+
       final picked = await picker.pickImage(
         source: source,
         imageQuality: 80, // Reduce image quality to save memory
-        maxWidth: 800,    // Limit image dimensions
+        maxWidth: 800, // Limit image dimensions
       );
-      
+
       if (picked != null && mounted) {
         setState(() {
           _pickedImage = File(picked.path);
@@ -238,41 +239,56 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               _buildGenderSelector(),
               const SizedBox(height: 32),
               _buildActionButton(
-                text: 'Akkaundtan chiqish',
+                text: 'Akkauntdan chiqish',
                 color: Colors.purple,
                 textColor: Colors.white,
                 onPressed: () async {
                   // Show confirmation dialog
                   final confirm = await showDialog<bool>(
                     context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text('Akkauntdan chiqish', style: GoogleFonts.poppins()),
-                      content: Text(
-                        'Akkauntdan chiqishni xohlaysizmi?',
-                        style: GoogleFonts.poppins(),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, false),
-                          child: Text('Bekor qilish', style: GoogleFonts.poppins()),
+                    builder:
+                        (context) => AlertDialog(
+                          title: Text(
+                            'Akkauntdan chiqish',
+                            style: GoogleFonts.poppins(),
+                          ),
+                          content: Text(
+                            'Akkauntdan chiqishni xohlaysizmi?',
+                            style: GoogleFonts.poppins(),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              child: Text(
+                                'Bekor qilish',
+                                style: GoogleFonts.poppins(),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              child: Text(
+                                'Chiqish',
+                                style: GoogleFonts.poppins(color: Colors.red),
+                              ),
+                            ),
+                          ],
                         ),
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, true),
-                          child: Text('Chiqish', style: GoogleFonts.poppins(color: Colors.red)),
-                        ),
-                      ],
-                    ),
                   );
-                  
+
                   if (confirm == true) {
                     // Clear auth token and navigate to auth screen
-                    await Provider.of<AuthProvider>(context, listen: false).logout();
-                    
+                    await Provider.of<AuthProvider>(
+                      context,
+                      listen: false,
+                    ).logout();
+
                     if (!mounted) return;
-                    
+
                     // Navigate to the initial auth page and remove all previous routes
                     Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => const PhoneInputScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => const PhoneInputScreen(),
+                      ),
                       (route) => false,
                     );
                   }
@@ -280,7 +296,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               const SizedBox(height: 12),
               _buildActionButton(
-                text: 'Akkaundtan o\'chirish',
+                text: 'Akkauntni o\'chirish',
                 color: Colors.purple.shade100,
                 textColor: Colors.purple,
                 onPressed: () {},
@@ -329,7 +345,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           style: GoogleFonts.poppins(color: Colors.black),
           decoration: InputDecoration(
-            labelText: 'Tugilgan kun',
+            labelText: 'Tug\'ilgan kun',
             labelStyle: GoogleFonts.poppins(color: Colors.purple),
             filled: true,
             fillColor: Colors.grey.shade50,

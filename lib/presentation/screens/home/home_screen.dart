@@ -546,16 +546,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: GoogleMap(
-                      initialCameraPosition: CameraPosition(
-                        target: LatLng(41.299496, 69.240073), // Tashkent center
-                        zoom: 12,
-                      ),
-                      myLocationEnabled: true,
-                      myLocationButtonEnabled: true,
-                      zoomControlsEnabled: true,
-                      mapToolbarEnabled: false,
-                    ),
+                    child: SizedBox(),
+                    // GoogleMap(
+                    //   initialCameraPosition: CameraPosition(
+                    //     target: LatLng(41.299496, 69.240073), // Tashkent center
+                    //     zoom: 12,
+                    //   ),
+                    //   myLocationEnabled: true,
+                    //   myLocationButtonEnabled: true,
+                    //   zoomControlsEnabled: true,
+                    //   mapToolbarEnabled: false,
+                    // ),
                   ),
                 ),
 

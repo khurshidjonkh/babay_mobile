@@ -189,6 +189,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 itemCount: _partners.length,
+                clipBehavior: Clip.none,
                 itemBuilder: (context, index) {
                   return Container(
                     width: 100,
@@ -295,17 +296,18 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                      target: LatLng(41.299496, 69.240073), // Tashkent center
-                      zoom: 12,
-                    ),
-                    myLocationEnabled: true,
-                    myLocationButtonEnabled: true,
-                    zoomControlsEnabled: true,
-                    mapToolbarEnabled: false,
-                  ),
+                  child: SizedBox(),
+                  // GoogleMap(
+                  //   initialCameraPosition: CameraPosition(
+                  //     target: LatLng(41.299496, 69.240073), // Tashkent center
+                  //     zoom: 12,
+                  //   ),
+                  //   myLocationEnabled: true,
+                  //   myLocationButtonEnabled: true,
+                  //   zoomControlsEnabled: true,
+                  //   mapToolbarEnabled: false,
                 ),
+                // ),
               ),
 
             // Coupon cards

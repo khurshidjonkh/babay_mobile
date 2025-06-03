@@ -35,70 +35,43 @@ class _MainNavigationState extends State<MainNavigation> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _screens[_currentIndex],
-      bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                offset: const Offset(0, -1),
-              ),
-            ],
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) => setState(() => _currentIndex = index),
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.white,
+        selectedItemColor: primaryColor,
+        unselectedItemColor: Colors.grey,
+        selectedFontSize: 12,
+        unselectedFontSize: 12,
+        elevation: 0,
+        items: [
+          _buildBottomNavigationBarItem(
+            icon: Icons.home_outlined,
+            activeIcon: Icons.home,
+            label: 'Home',
           ),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-            child: BottomNavigationBar(
-              currentIndex: _currentIndex,
-              onTap: (index) => setState(() => _currentIndex = index),
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: Colors.white,
-              selectedItemColor: primaryColor,
-              unselectedItemColor: Colors.grey,
-              selectedFontSize: 12,
-              unselectedFontSize: 12,
-              elevation: 0,
-              items: [
-                _buildBottomNavigationBarItem(
-                  icon: Icons.home_outlined,
-                  activeIcon: Icons.home,
-                  label: 'Home',
-                ),
-                _buildBottomNavigationBarItem(
-                  icon: Icons.article_outlined,
-                  activeIcon: Icons.article,
-                  label: 'Cards',
-                ),
-                _buildBottomNavigationBarItem(
-                  icon: Icons.search_outlined,
-                  activeIcon: Icons.search,
-                  label: 'Search',
-                ),
-                _buildBottomNavigationBarItem(
-                  icon: Icons.notifications_outlined,
-                  activeIcon: Icons.notifications,
-                  label: 'Notifications',
-                ),
-                _buildBottomNavigationBarItem(
-                  icon: Icons.person_outline,
-                  activeIcon: Icons.person,
-                  label: 'Profile',
-                ),
-              ],
-            ),
+          _buildBottomNavigationBarItem(
+            icon: Icons.article_outlined,
+            activeIcon: Icons.article,
+            label: 'Cards',
           ),
-        ),
+          _buildBottomNavigationBarItem(
+            icon: Icons.search_outlined,
+            activeIcon: Icons.search,
+            label: 'Search',
+          ),
+          _buildBottomNavigationBarItem(
+            icon: Icons.notifications_outlined,
+            activeIcon: Icons.notifications,
+            label: 'Notifications',
+          ),
+          _buildBottomNavigationBarItem(
+            icon: Icons.person_outline,
+            activeIcon: Icons.person,
+            label: 'Profile',
+          ),
+        ],
       ),
     );
   }
