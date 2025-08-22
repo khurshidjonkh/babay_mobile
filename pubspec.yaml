@@ -1,8 +1,8 @@
 name: babay_mobile
 description: "A coupon app for markets, cafes, and other retail establishments."
-publish_to: 'none'
+publish_to: "none"
 
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ^3.7.2
