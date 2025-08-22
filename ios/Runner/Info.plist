@@ -51,7 +51,11 @@
     <string>This app needs access to location when open to show nearby deals.</string>
     <key>NSLocationAlwaysUsageDescription</key>
     <string>This app needs access to location when in the background to show nearby deals.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>This app needs access to camera to scan QR codes for partner deals and promotions.</string>
     <key>io.flutter.embedded_views_preview</key>
     <string>YES</string>
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
   </dict>
 </plist>
