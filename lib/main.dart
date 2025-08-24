@@ -1,4 +1,5 @@
 import 'package:babay_mobile/core/providers/profile_provider.dart';
+import 'package:babay_mobile/core/providers/notification_provider.dart';
 import 'package:babay_mobile/presentation/screens/auth/splash_screen.dart';
 import 'package:babay_mobile/presentation/screens/main_navigation.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => locator<AuthProvider>()),
         ChangeNotifierProvider(create: (_) => locator<ProfileProvider>()),
+        ChangeNotifierProvider(create: (_) => locator<NotificationProvider>()),
       ],
       child: MaterialApp(
         title: 'BaBay',

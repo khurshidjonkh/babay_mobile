@@ -31,6 +31,7 @@ dependencies:
   google_maps_flutter: ^2.12.2
   flutter_launcher_icons: ^0.14.3
   rename_app: ^1.6.3
+  cached_network_image: ^3.3.1
 
 dev_dependencies:
   flutter_test:

@@ -1,138 +1,178 @@
-import 'package:babay_mobile/presentation/widgets/notification_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:provider/provider.dart';
+import '../../../core/providers/notification_provider.dart';
+import '../../../core/providers/auth_provider.dart';
+import 'auth/phone_input_screen.dart';
+import '../widgets/notification_card.dart';
 
-// App theme colors - matching the app's theme
+// App theme colors
 const Color primaryColor = Color(0xFF6A1B9A);
 const Color secondaryColor = Color(0xFF9C27B0);
 const Color accentColor = Color(0xFFE1BEE7);
 const Color backgroundColor = Color(0xFFF5F5F5);
 
-class NotificationsScreen extends StatelessWidget {
+class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> notifications = [
-      {
-        'name': 'Safia',
-        'expiry': '24.03.2025',
-        'logo': 'assets/images/safia.jpg',
-        'amount': 50000.0,
-        'color': const Color(0xFFE8E5FF),
-      },
-      {
-        'name': 'Korzinka',
-        'expiry': '24.03.2025',
-        'logo': 'assets/images/korzinka.png',
-        'amount': 50000.0,
-        'color': const Color.fromARGB(255, 230, 136, 194),
-      },
-      {
-        'name': 'Qanotchi',
-        'expiry': '24.03.2025',
-        'logo': 'assets/images/qanotchi.jpg',
-        'amount': 50000.0,
-        'color': const Color.fromARGB(255, 55, 221, 69),
-      },
-    ];
+  State<NotificationsScreen> createState() => _NotificationsScreenState();
+}
 
+class _NotificationsScreenState extends State<NotificationsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Fetch notifications when screen initializes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<NotificationProvider>(
+        context,
+        listen: false,
+      ).fetchNotifications();
+    });
+  }
+
+  void _handleSessionExpired() {
+    // Clear auth and navigate to login
+    Provider.of<AuthProvider>(context, listen: false).logout();
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => const PhoneInputScreen()),
+      (route) => false,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         elevation: 0,
-
-        centerTitle: true,
-        title: Text(
-          'Xabarlar',
-          style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Xabarlar',
+            style: GoogleFonts.poppins(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: notifications.length,
-        itemBuilder: (context, index) {
-          final notification = notifications[index];
-          return InkWell(
-            onTap: () {
-              showCupertinoModalBottomSheet(
-                context: context,
-                backgroundColor: Colors.transparent,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                ),
-                shadow: BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
-                  spreadRadius: 5,
-                  offset: const Offset(0, 2),
-                ),
-                builder:
-                    (context) =>
-                        NotificationSheet(notification: notifications[index]),
-              );
-            },
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 12),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-                border: Border.all(color: Colors.grey.shade200, width: 0.5),
-              ),
-              child: Row(
+      body: Consumer<NotificationProvider>(
+        builder: (context, notificationProvider, child) {
+          // Handle session expiration
+          if (notificationProvider.error?.contains('Session expired') == true) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _handleSessionExpired();
+            });
+          }
+
+          // Show loading state
+          if (notificationProvider.isLoading) {
+            return const Center(child: CupertinoActivityIndicator());
+          }
+
+          // Show error state
+          if (notificationProvider.error != null &&
+              !notificationProvider.error!.contains('Session expired')) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: AssetImage(notification['logo']!),
-                        fit: BoxFit.cover,
+                  Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Xatolik yuz berdi',
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    notificationProvider.error!,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: Colors.grey[500],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () => notificationProvider.fetchNotifications(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'Qaytadan urinib ko\'ring',
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          notification['name']!,
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Text(
-                          '${notification['amount']} UZS kupon aktiv.. This is a longer notification text that can span multiple lines to show more content',
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            color: Colors.grey.shade600,
-                          ),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+                ],
+              ),
+            );
+          }
+
+          // Show empty state
+          if (notificationProvider.notifications.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.notifications_none,
+                    size: 64,
+                    color: Colors.grey[400],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Xabarlar yo\'q',
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[600],
                     ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Hozircha sizda xabarlar mavjud emas',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: Colors.grey[500],
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
+            );
+          }
+
+          // Show notifications list
+          return RefreshIndicator(
+            onRefresh:
+                () => notificationProvider.fetchNotifications(silent: true),
+            color: primaryColor,
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: notificationProvider.notifications.length,
+              itemBuilder: (context, index) {
+                final notification = notificationProvider.notifications[index];
+                return NotificationCard(
+                  notification: notification,
+                  provider: notificationProvider,
+                );
+              },
             ),
           );
         },

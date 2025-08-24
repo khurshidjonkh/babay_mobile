@@ -2,8 +2,10 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../data/services/auth_service.dart';
 import '../data/services/profile_service.dart';
+import '../data/services/notification_service.dart';
 import 'providers/auth_provider.dart';
 import 'providers/profile_provider.dart';
+import 'providers/notification_provider.dart';
 
 final GetIt locator = GetIt.instance;
 
@@ -26,5 +28,13 @@ Future<void> setupServiceLocator() async {
   // Register ProfileProvider
   locator.registerSingleton<ProfileProvider>(
     ProfileProvider(locator<ProfileService>()),
+  );
+
+  // Register NotificationService
+  locator.registerSingleton<NotificationService>(NotificationService());
+
+  // Register NotificationProvider
+  locator.registerSingleton<NotificationProvider>(
+    NotificationProvider(locator<NotificationService>()),
   );
 }

@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  static const String baseUrl = 'https://babay.pro'; // Changed to HTTPS
+  static const String baseUrl = 'https://babay.pro';
   static const String authEndpoint = '/app/auth.php';
   static const String tokenKey = 'jwt_token';
 
@@ -54,45 +54,26 @@ class AuthService {
     try {
       logger.d('Sending phone number: $phone');
 
-      final formData = FormData.fromMap({'phone': phone});
+      // Send as JSON as per API specification
+      final response = await _dio.post(
+        authEndpoint,
+        data: {'phone': phone},
+        options: Options(followRedirects: true),
+      );
 
-      // Add retry mechanism for network stability
-      int retries = 3;
-      while (retries > 0) {
-        try {
-          final response = await _dio.post(
-            authEndpoint,
-            data: formData,
-            options: Options(followRedirects: true),
-          );
+      logger.d('Response: ${response.data}');
 
-          logger.d('Response: ${response.data}');
-
-          if (response.data['status'] == 'OK') {
-            return true;
-          } else {
-            logger.e('Error response: ${response.data}');
-            return false;
-          }
-        } on SocketException catch (e) {
-          logger.e('Socket exception: $e');
-          retries--;
-          if (retries <= 0) return false;
-          await Future.delayed(const Duration(seconds: 2)); // Wait before retry
-        } on DioException catch (e) {
-          logger.e('Dio exception: ${e.type} - ${e.message}');
-          if (e.type == DioExceptionType.connectionTimeout ||
-              e.type == DioExceptionType.connectionError) {
-            retries--;
-            if (retries <= 0) return false;
-            await Future.delayed(
-              const Duration(seconds: 2),
-            ); // Wait before retry
-          } else {
-            return false;
-          }
-        }
+      if (response.data['status'] == 'OK') {
+        return true;
+      } else {
+        logger.e('Error response: ${response.data}');
+        return false;
       }
+    } on SocketException catch (e) {
+      logger.e('Socket exception: $e');
+      return false;
+    } on DioException catch (e) {
+      logger.e('Dio exception: ${e.type} - ${e.message}');
       return false;
     } catch (e) {
       logger.e('Error sending phone number: $e');
@@ -105,11 +86,10 @@ class AuthService {
     try {
       logger.d('Verifying code: $code for phone: $phone');
 
-      final formData = FormData.fromMap({'phone': phone, 'sms_code': code});
-
+      // Send as JSON as per API specification
       final response = await _dio.post(
         authEndpoint,
-        data: formData,
+        data: {'phone': phone, 'sms_code': code},
         options: Options(followRedirects: true),
       );
 
@@ -122,9 +102,17 @@ class AuthService {
         await _saveToken(rawToken);
         return rawToken;
       } else {
-        logger.e('Error: ${response.data['message'] ?? 'Unknown error'}');
+        // Extract error message from API response
+        final errorMessage = response.data['message'] ?? 'Unknown error';
+        logger.e('Error: $errorMessage');
         return null;
       }
+    } on SocketException catch (e) {
+      logger.e('Socket exception: $e');
+      return null;
+    } on DioException catch (e) {
+      logger.e('Dio exception: ${e.type} - ${e.message}');
+      return null;
     } catch (e) {
       logger.e('Error verifying code: $e');
       return null;
