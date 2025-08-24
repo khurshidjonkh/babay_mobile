@@ -16,7 +16,7 @@ class ProfileService {
         throw Exception('No token available');
       }
 
-      final headers = {'Token': rawToken, 'Lang': 'en'};
+      final headers = {'Token': rawToken};
       final response = await http.get(Uri.parse(baseUrl), headers: headers);
       final data = json.decode(response.body);
       logger.d('Profile response: $data');

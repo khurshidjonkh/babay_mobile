@@ -1,11 +1,19 @@
-import 'package:babay_mobile/presentation/widgets/babay_gold_sheet.dart';
+import 'package:babay_mobile/presentation/widgets/profile_shimmer.dart';
+import 'package:babay_mobile/presentation/widgets/babay_gold_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../core/providers/profile_provider.dart';
 import '../../../data/models/user_profile_model.dart';
 import 'edit_profile_screen.dart';
+
+// App theme colors
+const Color primaryColor = Color(0xFF6A1B9A);
+const Color secondaryColor = Color(0xFF9C27B0);
+const Color accentColor = Color(0xFFE1BEE7);
+const Color backgroundColor = Color(0xFFF5F5F5);
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -27,13 +35,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  // BaBay Gold data
-  final Map<String, dynamic> _babayGoldData = {
-    'points': '28,575',
-    'expiry': '24.04.2025',
-    'progress': 0.7,
-  };
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,18 +43,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         elevation: 0,
-        centerTitle: true,
-        title: Text(
-          'Mening Profilim',
-          style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Mening Profilim',
+            style: GoogleFonts.poppins(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit_outlined, color: Colors.black),
+            icon: SvgPicture.asset(
+              'assets/icons/edit-03-solid-rounded.svg',
+              width: 24,
+              height: 24,
+              colorFilter: const ColorFilter.mode(
+                Colors.black,
+                BlendMode.srcIn,
+              ),
+            ),
             onPressed: () {
               final profile =
                   Provider.of<ProfileProvider>(context, listen: false).profile;
@@ -84,86 +95,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.language, color: Colors.black),
-            onPressed: () {
-              showCupertinoModalBottomSheet(
-                context: context,
-                backgroundColor: Colors.white,
-                builder:
-                    (context) => Material(
-                      color: Colors.white,
-                      child: SafeArea(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              width: 40,
-                              height: 4,
-                              margin: const EdgeInsets.only(
-                                top: 12,
-                                bottom: 12,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade300,
-                                borderRadius: BorderRadius.circular(2),
-                              ),
-                            ),
-                            ListTile(
-                              leading: const Text(
-                                '🇺🇿',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                              title: Text(
-                                'Uzbek',
-                                style: GoogleFonts.poppins(),
-                              ),
-                              onTap: () {
-                                Navigator.pop(context, 'uz');
-                                // Set language here
-                              },
-                            ),
-                            ListTile(
-                              leading: const Text(
-                                '🇷🇺',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                              title: Text(
-                                'Russian',
-                                style: GoogleFonts.poppins(),
-                              ),
-                              onTap: () {
-                                Navigator.pop(context, 'ru');
-                                // Set language here
-                              },
-                            ),
-                            ListTile(
-                              leading: const Text(
-                                '🇬🇧',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                              title: Text(
-                                'English',
-                                style: GoogleFonts.poppins(),
-                              ),
-                              onTap: () {
-                                Navigator.pop(context, 'en');
-                                // Set language here
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-              );
-            },
-          ),
         ],
       ),
       body: Consumer<ProfileProvider>(
         builder: (context, profileProvider, _) {
           if (profileProvider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const ProfileShimmer();
           }
 
           final UserProfile? profile = profileProvider.profile;
@@ -173,14 +110,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'Profile data not available',
-                    style: GoogleFonts.poppins(fontSize: 16),
-                  ),
+                  Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
                   const SizedBox(height: 16),
+                  Text(
+                    'Profil ma\'lumotlari mavjud emas',
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Iltimos, qaytadan urinib ko\'ring',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: Colors.grey[500],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () => profileProvider.fetchProfile(context),
-                    child: Text('Retry', style: GoogleFonts.poppins()),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'Qaytadan urinib ko\'ring',
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -192,144 +157,116 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.all(24.0),
               child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.grey,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child:
-                          profile.photo != null && profile.photo!.isNotEmpty
-                              ? Image.network(
-                                'https://babay.pro${profile.photo}',
-                                fit: BoxFit.cover,
-                                width: 100,
-                                height: 100,
-                                errorBuilder:
-                                    (context, error, stackTrace) => const Icon(
-                                      Icons.person,
-                                      size: 50,
-                                      color: Colors.white,
-                                    ),
-                              )
-                              : Image.asset(
-                                'assets/images/user.png',
-                                fit: BoxFit.cover,
-                                width: 100,
-                                height: 100,
-                                errorBuilder:
-                                    (context, error, stackTrace) => const Icon(
-                                      Icons.person,
-                                      size: 50,
-                                      color: Colors.white,
-                                    ),
-                              ),
+                  // Profile Photo Section
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    (profile.name.isEmpty && profile.lastName.isEmpty)
-                        ? 'Anonymous'
-                        : '${profile.name} ${profile.lastName}',
-                    style: GoogleFonts.poppins(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
-                  _buildInfoRow(Icons.phone, profile.phone),
-                  const SizedBox(height: 12),
-                  _buildInfoRow(Icons.email, profile.email),
-                  const SizedBox(height: 32),
-                  // BaBay Gold Card
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
-                    child: Text(
-                      'BaBay Gold',
-                      style: GoogleFonts.poppins(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
+                    child: CircleAvatar(
+                      radius: 60,
+                      backgroundColor: Colors.grey[200],
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(60),
+                        child: _buildProfileImage(profile),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: InkWell(
-                      onTap: () {
-                        showCupertinoModalBottomSheet(
-                          context: context,
-                          backgroundColor: Colors.transparent,
-                          builder:
-                              (context) =>
-                                  BaBayGoldSheet(goldData: _babayGoldData),
-                        );
-                      },
+
+                  const SizedBox(height: 20),
+
+                  // Name Section
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16,
+                      horizontal: 20,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[50],
                       borderRadius: BorderRadius.circular(16),
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [primaryColor, secondaryColor],
+                      border: Border.all(color: Colors.grey[200]!, width: 1),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          (profile.name.isEmpty && profile.lastName.isEmpty)
+                              ? 'Noma\'lum'
+                              : '${profile.name} ${profile.lastName}',
+                          style: GoogleFonts.poppins(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
                           ),
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
+                          textAlign: TextAlign.center,
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'BaBay GOLD',
-                              style: GoogleFonts.poppins(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(4),
-                              child: LinearProgressIndicator(
-                                value: _babayGoldData['progress'],
-                                minHeight: 8,
-                                backgroundColor: Colors.white.withOpacity(0.3),
-                                valueColor: const AlwaysStoppedAnimation<Color>(
-                                  Colors.cyan,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              '${_babayGoldData['points']} BaBay Pointlari',
-                              style: GoogleFonts.poppins(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Tugash muddati: ${_babayGoldData['expiry']}',
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white.withOpacity(0.8),
-                              ),
-                            ),
-                          ],
+                        const SizedBox(height: 4),
+                        Text(
+                          'To\'liq ism',
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
+
+                  const SizedBox(height: 20),
+
+                  // Contact Information Section
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.grey[200]!, width: 1),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Aloqa ma\'lumotlari',
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        _buildInfoRow(
+                          'assets/icons/call-02-solid-rounded.svg',
+                          profile.phone,
+                          'Telefon raqam',
+                        ),
+                        const SizedBox(height: 12),
+                        _buildInfoRow(
+                          'assets/icons/mail-02-solid-rounded.svg',
+                          profile.email,
+                          'Email',
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 32),
+
+                  // BaBay Gold Card
+                  const BaBayGoldCard(),
                 ],
               ),
             ),
@@ -339,14 +276,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String text) {
+  Widget _buildProfileImage(UserProfile profile) {
+    if (profile.photo != null && profile.photo!.isNotEmpty) {
+      final imageUrl =
+          profile.photo!.startsWith('http')
+              ? profile.photo!
+              : 'https://babay.pro${profile.photo}';
+
+      return CachedNetworkImage(
+        imageUrl: imageUrl,
+        fit: BoxFit.cover,
+        width: 120,
+        height: 120,
+        placeholder:
+            (context, url) => Container(
+              color: Colors.grey[200],
+              child: const Icon(Icons.person, size: 50, color: Colors.grey),
+            ),
+        errorWidget:
+            (context, url, error) =>
+                const Icon(Icons.person, size: 50, color: Colors.grey),
+      );
+    } else {
+      return const Icon(Icons.person, size: 50, color: Colors.grey);
+    }
+  }
+
+  Widget _buildInfoRow(String iconPath, String text, String label) {
     return Row(
       children: [
-        Icon(icon, color: Colors.grey[600], size: 20),
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: primaryColor.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: SvgPicture.asset(
+            iconPath,
+            width: 20,
+            height: 20,
+            colorFilter: const ColorFilter.mode(primaryColor, BlendMode.srcIn),
+          ),
+        ),
         const SizedBox(width: 12),
-        Text(
-          text,
-          style: GoogleFonts.poppins(fontSize: 16, color: Colors.black87),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                text,
+                style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                ),
+              ),
+              Text(
+                label,
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
