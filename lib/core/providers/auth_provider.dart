@@ -25,13 +25,14 @@ class AuthProvider extends ChangeNotifier {
       if (result) {
         phoneNumber = phone;
       } else {
-        _error = 'Tasdiqlash kodini yuborib bo\'lmadi';
+        _error =
+            'Tasdiqlash kodini yuborib bo\'lmadi. Iltimos, qaytadan urinib ko\'ring.';
       }
       notifyListeners();
       return result;
     } catch (e) {
       _isLoading = false;
-      _error = e.toString();
+      _error = 'Tarmoq xatosi. Iltimos, internet aloqangizni tekshiring.';
       notifyListeners();
       return false;
     }
@@ -40,7 +41,7 @@ class AuthProvider extends ChangeNotifier {
   // Verify phone number with code
   Future<bool> verifyCode(String code) async {
     if (phoneNumber == null) {
-      _error = 'Telefon raqami topilmadi';
+      _error = 'Telefon raqami topilmadi. Iltimos, qaytadan kiriting.';
       notifyListeners();
       return false;
     }
@@ -53,7 +54,8 @@ class AuthProvider extends ChangeNotifier {
       final token = await _authService.verifyCode(phoneNumber!, code);
       _isLoading = false;
       if (token == null) {
-        _error = 'Tasdiqlash kodi noto\'g\'i';
+        _error =
+            'Tasdiqlash kodi noto\'g\'i. Iltimos, to\'g\'ri kodni kiriting.';
         notifyListeners();
         return false;
       }
@@ -61,10 +63,16 @@ class AuthProvider extends ChangeNotifier {
       return true;
     } catch (e) {
       _isLoading = false;
-      _error = e.toString();
+      _error = 'Tarmoq xatosi. Iltimos, internet aloqangizni tekshiring.';
       notifyListeners();
       return false;
     }
+  }
+
+  // Clear error message
+  void clearError() {
+    _error = null;
+    notifyListeners();
   }
 
   // Logout

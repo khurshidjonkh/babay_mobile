@@ -48,7 +48,9 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     if (authProvider.phoneNumber == null) {
-      _showErrorSnackBar('Telefon raqami topilmadi');
+      _showErrorSnackBar(
+        'Telefon raqami topilmadi. Iltimos, qaytadan urinib ko\'ring.',
+      );
       return;
     }
 

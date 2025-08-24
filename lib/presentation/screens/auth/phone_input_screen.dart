@@ -32,6 +32,9 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     try {
+      // Clear any previous errors
+      authProvider.clearError();
+
       final success = await authProvider.sendPhoneNumber(
         '998${_phoneController.text}',
       );
@@ -50,7 +53,9 @@ class _PhoneInputScreenState extends State<PhoneInputScreen> {
       }
     } catch (e) {
       if (!mounted) return;
-      _showErrorSnackBar(e.toString());
+      _showErrorSnackBar(
+        'Kutilmagan xatolik yuz berdi. Iltimos, qaytadan urinib ko\'ring.',
+      );
     } finally {
       if (mounted) {
         setState(() => _isSubmitting = false);
