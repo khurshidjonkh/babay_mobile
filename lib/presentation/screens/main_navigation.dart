@@ -1,5 +1,6 @@
 import 'package:babay_mobile/presentation/screens/card_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'home/home_screen.dart';
 import 'search/search_screen.dart';
@@ -13,7 +14,7 @@ const Color accentColor = Color(0xFFE1BEE7);
 const Color backgroundColor = Color(0xFFF5F5F5);
 
 class MainNavigation extends StatefulWidget {
-  const MainNavigation({Key? key}) : super(key: key);
+  const MainNavigation({super.key});
 
   @override
   State<MainNavigation> createState() => _MainNavigationState();
@@ -42,34 +43,29 @@ class _MainNavigationState extends State<MainNavigation> {
         backgroundColor: Colors.white,
         selectedItemColor: primaryColor,
         unselectedItemColor: Colors.grey,
-        selectedFontSize: 12,
-        unselectedFontSize: 12,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         elevation: 0,
         items: [
           _buildBottomNavigationBarItem(
-            icon: Icons.home_outlined,
-            activeIcon: Icons.home,
-            label: 'Home',
+            icon: 'assets/icons/home-02-stroke-rounded.svg',
+            activeIcon: 'assets/icons/home-02-solid-rounded.svg',
           ),
           _buildBottomNavigationBarItem(
-            icon: Icons.article_outlined,
-            activeIcon: Icons.article,
-            label: 'Cards',
+            icon: 'assets/icons/document-attachment-stroke-rounded.svg',
+            activeIcon: 'assets/icons/document-attachment-solid-rounded.svg',
           ),
           _buildBottomNavigationBarItem(
-            icon: Icons.search_outlined,
-            activeIcon: Icons.search,
-            label: 'Search',
+            icon: 'assets/icons/search-02-stroke-rounded.svg',
+            activeIcon: 'assets/icons/search-02-solid-rounded.svg',
           ),
           _buildBottomNavigationBarItem(
-            icon: Icons.notifications_outlined,
-            activeIcon: Icons.notifications,
-            label: 'Notifications',
+            icon: 'assets/icons/notification-01-stroke-rounded.svg',
+            activeIcon: 'assets/icons/notification-01-solid-rounded.svg',
           ),
           _buildBottomNavigationBarItem(
-            icon: Icons.person_outline,
-            activeIcon: Icons.person,
-            label: 'Profile',
+            icon: 'assets/icons/user-circle-stroke-rounded.svg',
+            activeIcon: 'assets/icons/user-circle-solid-rounded.svg',
           ),
         ],
       ),
@@ -77,23 +73,23 @@ class _MainNavigationState extends State<MainNavigation> {
   }
 
   BottomNavigationBarItem _buildBottomNavigationBarItem({
-    required IconData icon,
-    required IconData activeIcon,
-    required String label,
+    required String icon,
+    required String activeIcon,
   }) {
     return BottomNavigationBarItem(
-      icon: Icon(icon),
-      activeIcon: ShaderMask(
-        shaderCallback: (Rect bounds) {
-          return const LinearGradient(
-            colors: [primaryColor, secondaryColor],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ).createShader(bounds);
-        },
-        child: Icon(activeIcon),
+      icon: SvgPicture.asset(
+        icon,
+        width: 24,
+        height: 24,
+        colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
       ),
-      label: label,
+      activeIcon: SvgPicture.asset(
+        activeIcon,
+        width: 24,
+        height: 24,
+        colorFilter: const ColorFilter.mode(primaryColor, BlendMode.srcIn),
+      ),
+      label: '',
     );
   }
 }
