@@ -51,12 +51,12 @@ class NotificationCard extends StatelessWidget {
                 ),
                 child: CachedNetworkImage(
                   imageUrl: notification.fullImageUrl!,
-                  height: 160,
+                  height: 200,
                   width: double.infinity,
                   fit: BoxFit.cover,
                   placeholder:
                       (context, url) => Container(
-                        height: 160,
+                        height: 200,
                         color: Colors.grey[200],
                         child: const Center(
                           child: CupertinoActivityIndicator(),
@@ -64,7 +64,7 @@ class NotificationCard extends StatelessWidget {
                       ),
                   errorWidget:
                       (context, url, error) => Container(
-                        height: 160,
+                        height: 200,
                         color: Colors.grey[200],
                         child: const Icon(
                           Icons.image_not_supported,

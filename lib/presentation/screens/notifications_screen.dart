@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../../../core/providers/notification_provider.dart';
 import '../../../core/providers/auth_provider.dart';
 import 'auth/phone_input_screen.dart';
 import '../widgets/notification_card.dart';
+import '../widgets/notification_shimmer.dart';
 
 // App theme colors
 const Color primaryColor = Color(0xFF6A1B9A);
@@ -70,9 +70,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             });
           }
 
-          // Show loading state
+          // Show loading state with shimmer
           if (notificationProvider.isLoading) {
-            return const Center(child: CupertinoActivityIndicator());
+            return ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: 5, // Show 5 shimmer cards while loading
+              itemBuilder: (context, index) => const NotificationShimmer(),
+            );
           }
 
           // Show error state
